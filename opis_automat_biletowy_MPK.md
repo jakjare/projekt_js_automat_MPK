@@ -12,3 +12,12 @@ automat może wydać, wyświetla kwotę reszty, wydaje resztę oraz drukuje bile
 nie może wydać reszty, wyświetla taki komunikat i zwraca pieniądze. Automat wyświetla komunikat "Tylko odliczona
 kwota", kiedy nie posiada żadnych pieniędzy. Automat wyświetla ostrzeżenie "Automat może nie wydać reszty", kiedy poziom
 posiadanych pieniędzy jest zbyt niski.
+## Testy:
+1. Bilet kupiony za odliczoną kwotę, automat nie powinien wydać reszty ani wyświetlić takego komunikatu.
+2. Bilet kupiony płacąc więcej, automat powinien wyświetlić monit o tym ile reszty ma wydać.
+3. Bilet kupiony płacąc więcej, automat nie ma jak wydać reszty, automat informuje użytkownika o błędzie, nie drukuje biletów, zwraca wrzucone pieniądze.
+4. Zakup biletu płacąc po 1gr - suma stu monet 1gr ma być równa 1zł.
+5. Zakup dwóch różnych biletów naraz, automat sumuje ceny biletów i drukuje oba.
+6. Próba wrzucenia ujemnej oraz niecałkowitej liczby monet, automat wurzuca komunikat o błędzie.
+## Link do repozytorium:
+https://github.com/jakjare/projekt_js_automat_MPK
