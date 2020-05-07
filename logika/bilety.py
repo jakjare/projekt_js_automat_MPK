@@ -7,14 +7,14 @@ class Bilety():
         if not wariant in ["normalny", "ulgowy"]:
             raise Exception("Nieobsługiwany wariant biletu.")
         else:
-            self.__wartian = wariant
+            self.__wartiant = wariant
             self.__cena = int(cena*100)
 
     def cena(self):
         return self.__cena
 
     def wariant(self):
-        return self.__wartian
+        return self.__wartiant
 
     def nazwa(self):
         return self.__nazwa
