@@ -31,7 +31,8 @@ class Przechowywacz():
         aby uniknąć dublowania pieniędzy oraz zwraca wygenerowaną listę."""
         lista = []
         for kolumna in self.__przechowywane:
-            lista.append(self.__przechowywane[kolumna])
+            if not len(self.__przechowywane[kolumna]) == 0:
+                lista.extend(self.__przechowywane[kolumna])
         self.__przechowywane = {1: [], 2: [], 5: [], 10: [], 20: [], 50: [], 100: [], 200: [], 500: [], 1000: [], 2000: [], 5000: []}
         return lista
 
@@ -49,7 +50,7 @@ class Przechowywacz():
             raise Exception("Podany obiekt nie jest listą.")
         else:
             for i in p:
-                self.dodaj(p)
+                self.dodaj(i)
 
     def usun(self, wartosc):
         if len(self.__przechowywane[wartosc]) > 0:
