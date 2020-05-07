@@ -24,6 +24,17 @@ class Przechowywacz():
         self.__przechowywane = {1: [], 2: [], 5: [], 10: [], 20: [], 50: [], 100: [], 200: [], 500: [], 1000: [], 2000: [], 5000: []}
         self.__waluta = waluta
 
+    def lista(self):
+        """Konwertuje przechowywane pieniądze na listę.
+
+        Funkcja konwertuje wszystkie przechowane pieniądze na listę, zeruje przechowywane pieniądze
+        aby uniknąć dublowania pieniędzy oraz zwraca wygenerowaną listę."""
+        lista = []
+        for kolumna in self.__przechowywane:
+            lista.append(self.__przechowywane[kolumna])
+        self.__przechowywane = {1: [], 2: [], 5: [], 10: [], 20: [], 50: [], 100: [], 200: [], 500: [], 1000: [], 2000: [], 5000: []}
+        return lista
+
     def dodaj(self, p):
         if not isinstance(p, Pieniadz):
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
@@ -32,6 +43,13 @@ class Przechowywacz():
                 self.__przechowywane[p.wartosc()].append(p)
             else:
                 raise Exception("Nieznana waluta.")
+
+    def dodaj_wiele(self, p):
+        if not isinstance(p, list):
+            raise Exception("Podany obiekt nie jest listą.")
+        else:
+            for i in p:
+                self.dodaj(p)
 
     def usun(self, wartosc):
         if len(self.__przechowywane[wartosc]) > 0:
