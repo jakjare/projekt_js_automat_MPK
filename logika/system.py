@@ -1,6 +1,15 @@
 from logika import bilety
 from logika import pieniadze
 
+class ResztaException(Exception):
+    """Klasa ResztaException() dziedziczy po klasie Exception.
+
+    Klasa jest wywoływana w momencie, kiedy automat nie może wydać reszty z podanych przez
+    użytkownika monet."""
+
+    def __init__(self):
+        super().__init__("Nie mam jak wydać reszty.")
+
 class System():
     """Klasa System() obsługuje całą logikę działania automatu MPK.
 
@@ -55,23 +64,52 @@ class System():
         print("Drukuję bilety.")
 
     def dodaj_pieniadz(self, p):
+        """Funkcja do wurzania pieniędzy przez użytkownika.
+
+        Jeśli kwota wrzucona przekroczy wartość kwoty do zapłaty uruchamia się proces wydawania reszty. Automat
+        najpierw sprawdza czy posiada takie pieniądze, które może wydać. Jeśli tak, to wydaje resztę i drukuje bilety.
+        Natomiast jeśli wrzucona kwota zrówna się z wartością do zapłaty, wtedy automat po prostu wydrukuje bilety.
+        Kiedy nie wystąpi żaden z powyższych przypadków automat poczeka na kolejne pieniądze. Metoda zwraca listę monet
+        które chce zwrócić użytkownikowi lub pustą listę, kiedy nie potrzebuje nic zwracać. Kiedy automat nie może
+        wydać reszty zwraca pieniądze wrzucone przez użytkownika wcześniej."""
         if not isinstance(p, pieniadze.Pieniadz):
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
             self.__transakcja.dodaj(p)
             self.__do_zaplaty -= p.wartosc()
-            if self.do_zaplaty() == 0:
+            if self.__do_zaplaty == 0:
                 self.__kasa.dodaj_wiele(self.__transakcja.lista())
                 self.drukuj_bilety()
-            elif self.do_zaplaty() < 0:
-                print("Transakcja z resztą.")
-            else:
-                pass
+                return []
+            elif self.__do_zaplaty < 0:
+                wartosci = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
+                kasa = self.__kasa.przeglad()
+                reszta = []
+                for p_wart in range(1, len(wartosci)+1):
+                    for x in range(kasa[-p_wart]):
+                        if wartosci[-p_wart] + self.__do_zaplaty <= 0:
+                            self.__do_zaplaty += wartosci[-p_wart]
+                            kasa[-p_wart] -= 1
+                            reszta.append(wartosci[-p_wart])
+                        else:
+                            break
+                if self.__do_zaplaty < 0:
+                    return self.__transakcja.lista()
+                    ResztaException()
+                else:
+                    self.__kasa.dodaj_wiele(self.__transakcja.lista())
+                    for pieniadz in reszta:
+                        self.__transakcja.dodaj(self.__kasa.usun(pieniadz))
+                    self.drukuj_bilety()
+                    return self.__transakcja.lista()
 
 
 
 
-# Test działania klasy System() w wariancie bez wydawania reszty
+
+
+
+"""# Test działania klasy System() w wariancie bez wydawania reszty
 
 automat = System()                                  #Tworzę obiek automatu MPK
 b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
@@ -97,9 +135,38 @@ automat.dodaj_bilet_do_koszyka(xx["normalny"][0])
 
 print("Do zapłaty: {}".format(automat.do_zaplaty()))
 
-p1 = pieniadze.Pieniadz(1)                          #Generuję pieniądze do zapłacenia za bilety
-p2 = pieniadze.Pieniadz(5)
+p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
+p2 = pieniadze.Pieniadz(2)
+p3 = pieniadze.Pieniadz(2)
 automat.dodaj_pieniadz(p1)                          #Płacę za bilety tak aby automat nie musiał wydawać reszty
+automat.dodaj_pieniadz(p2)
+automat.dodaj_pieniadz(p3)
+
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+automat.admin_kasa()                                #Sprawdzam stan kasy"""
+
+
+# Test działania klasy System() w wariancie z możliwością wydania reszty
+
+automat = System()                                  #Tworzę obiek automatu MPK
+b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
+automat.dodaj_bilet(b1)                             #Dodaję bilet do automatu
+kasa_automatu = []                                  #Generuję pieniądze dla automatu
+for i in range(100):
+    kasa_automatu.append(pieniadze.Pieniadz(0.01))
+automat.admin_kasa(kasa_automatu)                   #Dodaję pieniądze do kasy w automacie
+del kasa_automatu
+
+xx = automat.bilety()
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
+
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+
+p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
+p2 = pieniadze.Pieniadz(2)
+p3 = pieniadze.Pieniadz(10)
+automat.dodaj_pieniadz(p1)                          #Płacę za bilety tak aby automat wydał resztę
 automat.dodaj_pieniadz(p2)
 
 print("Do zapłaty: {}".format(automat.do_zaplaty()))
