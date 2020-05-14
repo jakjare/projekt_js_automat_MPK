@@ -99,7 +99,6 @@ class System():
                             break
                 if self.__do_zaplaty < 0:
                     raise ResztaException()
-                    return self.__transakcja.lista()
                 else:
                     self.__kasa.dodaj_wiele(self.__transakcja.lista())
                     for pieniadz in reszta:
