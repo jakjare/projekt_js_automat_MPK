@@ -176,7 +176,7 @@ print("Do zapłaty: {}".format(automat.do_zaplaty()))
 automat.admin_kasa()                                #Sprawdzam stan kasy"""
 
 
-# Test działania klasy System() w wariancie z możliwością wydania reszty
+"""# Test działania klasy System() w wariancie z możliwością wydania reszty
 
 automat = System()                                  #Tworzę obiek automatu MPK
 b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
@@ -203,4 +203,4 @@ except ResztaException:
     zwrocone = automat.anuluj_transakcje()
 
 print("Do zapłaty: {}, zwrócone: {}".format(automat.do_zaplaty(), zwrocone))
-automat.admin_kasa()                                #Sprawdzam stan kasy
+automat.admin_kasa()                                #Sprawdzam stan kasy"""
