@@ -63,6 +63,10 @@ class System():
     def drukuj_bilety(self):
         print("Drukuję bilety.")
 
+    def anuluj_transakcje(self):
+        self.__bilety = {"normalny": [], "ulgowy": []}
+        return self.__transakcja.lista()
+
     def dodaj_pieniadz(self, p):
         """Funkcja do wurzania pieniędzy przez użytkownika.
 
@@ -94,8 +98,8 @@ class System():
                         else:
                             break
                 if self.__do_zaplaty < 0:
+                    raise ResztaException()
                     return self.__transakcja.lista()
-                    ResztaException()
                 else:
                     self.__kasa.dodaj_wiele(self.__transakcja.lista())
                     for pieniadz in reszta:
@@ -146,7 +150,7 @@ print("Do zapłaty: {}".format(automat.do_zaplaty()))
 automat.admin_kasa()                                #Sprawdzam stan kasy"""
 
 
-# Test działania klasy System() w wariancie z możliwością wydania reszty
+"""# Test działania klasy System() w wariancie z możliwością wydania reszty
 
 automat = System()                                  #Tworzę obiek automatu MPK
 b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
@@ -170,4 +174,34 @@ automat.dodaj_pieniadz(p1)                          #Płacę za bilety tak aby a
 automat.dodaj_pieniadz(p2)
 
 print("Do zapłaty: {}".format(automat.do_zaplaty()))
+automat.admin_kasa()                                #Sprawdzam stan kasy"""
+
+
+# Test działania klasy System() w wariancie z możliwością wydania reszty
+
+automat = System()                                  #Tworzę obiek automatu MPK
+b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
+automat.dodaj_bilet(b1)                             #Dodaję bilet do automatu
+kasa_automatu = []                                  #Generuję pieniądze dla automatu
+for i in range(30):
+    kasa_automatu.append(pieniadze.Pieniadz(0.01))
+automat.admin_kasa(kasa_automatu)                   #Dodaję pieniądze do kasy w automacie
+del kasa_automatu
+
+xx = automat.bilety()
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
+
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+
+p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
+p2 = pieniadze.Pieniadz(2)
+
+try:
+    automat.dodaj_pieniadz(p1)                      #Płacę za bilety tak aby automat wydał resztę
+    automat.dodaj_pieniadz(p2)
+except ResztaException:
+    zwrocone = automat.anuluj_transakcje()
+
+print("Do zapłaty: {}, zwrócone: {}".format(automat.do_zaplaty(), zwrocone))
 automat.admin_kasa()                                #Sprawdzam stan kasy
