@@ -72,7 +72,7 @@ class System():
         print("Drukuję bilety.")
 
     def anuluj_transakcje(self):
-        self.__bilety = {"normalny": [], "ulgowy": []}
+        self.__koszyk = []
         return self.__transakcja.lista()
 
     def dodaj_pieniadz(self, p):
