@@ -22,8 +22,10 @@ def usun_bilet(event):
     except system.UsuwanieBiletuException:
         event.widget.configure(bg="red")
 
-def aktualizuj_koszyk():
+def aktualizuj_koszyk(limit = 4):
     global ramka_koszyk
+    global suma
+    suma.configure(text="Do zapłaty: {:.2f} zł".format(automat.do_zaplaty()))
     ramka_koszyk.destroy()
     koszyk = automat.koszyk()
     ramka_koszyk = LabelFrame(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
@@ -33,14 +35,22 @@ def aktualizuj_koszyk():
     Label(ramka_koszyk, text="Rodzaj", font="Arial 15 bold", width=26).grid(row=0, column=2, padx=2, pady=2)
     Label(ramka_koszyk, text="Cena", font="Arial 15 bold", width=8).grid(row=0, column=3, padx=2, pady=2)
 
-    for i in range(len(koszyk)):
+    if limit >= len(koszyk):
+        zasieg = 0
+    else:
+        zasieg = len(koszyk)-4
+    for i in range(zasieg, len(koszyk)):
         Label(ramka_koszyk, text=str(i+1), font="Arial 15", width=5).grid(row=i+1, column=0, padx=2, pady=2)
         Label(ramka_koszyk, text=str(koszyk[i].nazwa()), font="Arial 15", width=44).grid(row=i+1, column=1, padx=2, pady=2)
         Label(ramka_koszyk, text=str(koszyk[i].wariant()), font="Arial 15", width=26).grid(row=i+1, column=2, padx=2, pady=2)
         Label(ramka_koszyk, text=str("{:.2f} zł".format(koszyk[i].cena()/100)), font="Arial 15", width=8).grid(row=i+1, column=3, padx=2, pady=2)
 
+def anuluj(event):
+    automat.anuluj_transakcje()
+    aktualizuj_koszyk()
 
-automat = system.System()                                   #Tworzę obiek automatu MPK
+
+automat = system.System()                                   #Tworzę obiekt automatu MPK
 bilety = [bilety.Bilety("Jednorazowy", "normalny", 3),
           bilety.Bilety("60-minutowy", "normalny", 4),
           bilety.Bilety("24-godzinny", "normalny", 9),
@@ -71,7 +81,7 @@ del kasa_automatu
 okno_glowne = Tk()                                          #Tworzę okno główne aplikacji
 okno_glowne.title("Automat biletowy MPK")
 okno_glowne.geometry("1100x900")
-okno_glowne.resizable(False, True)
+okno_glowne.resizable(False, False)
 
 # Wyświetla nagłówek interfejsu
 naglowek = Frame(okno_glowne, bg = "#00a2ff")
@@ -113,8 +123,32 @@ for rodzaj in lista_biletow:
     i = 0
 del i, j, lista_biletow
 
-#Wyświetla koszyk, czyli listę aktualnie dodanych biletów oraz sumę do zapłaty
-ramka_koszyk = LabelFrame(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
-aktualizuj_koszyk()
+#Wyświetla koszyk, czyli listę aktualnie dodanych biletów
+ramka_koszyk = LabelFrame(okno_glowne)
 
+
+#Wyświetla sumę do zapłaty oraz przyciski funkcyjne
+ramka_stopka = Frame(okno_glowne)
+ramka_stopka.pack(side = BOTTOM, fill=X, pady=10)
+suma = Label(ramka_stopka, width=20, height=2, font="Arial 15 bold", fg="black")
+suma.grid(row=0, column=0, padx=18, pady=2)
+b = Label(ramka_stopka, text="ZAPŁAĆ", bg="#139017", width=20, height=2, font="Arial 15", fg="black")
+b.bind("<Enter>", lambda event: event.widget.configure(bg="#92d050"))
+b.bind("<Leave>", lambda event: event.widget.configure(bg="#139017"))
+b.grid(row=0, column=1, padx=18, pady=2)
+
+b = Label(ramka_stopka, text="SPRAWDŹ KOSZYK", bg="#061981", width=20, height=2, font="Arial 15", fg="white")
+b.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
+b.bind("<Leave>", lambda event: event.widget.configure(bg="#061981"))
+b.grid(row=0, column=2, padx=18, pady=2)
+
+b = Label(ramka_stopka, text="ANULUJ", bg="red", width=20, height=2, font="Arial 15", fg="black")
+b.bind("<Enter>", lambda event: event.widget.configure(bg="#850000", fg="white"))
+b.bind("<Leave>", lambda event: event.widget.configure(bg="red", fg="black"))
+b.bind("<Button-1>", anuluj)
+b.grid(row=0, column=3, padx=18, pady=2)
+
+
+
+aktualizuj_koszyk()
 okno_glowne.mainloop()
