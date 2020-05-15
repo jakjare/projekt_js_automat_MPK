@@ -73,6 +73,7 @@ class System():
 
     def anuluj_transakcje(self):
         self.__koszyk = []
+        self.__do_zaplaty = 0
         return self.__transakcja.lista()
 
     def dodaj_pieniadz(self, p):
