@@ -10,6 +10,14 @@ class ResztaException(Exception):
     def __init__(self):
         super().__init__("Nie mam jak wydać reszty.")
 
+class UsuwanieBiletuException(Exception):
+    """Klasa UsuwanieBiletuException() dziedziczy po klasie Exception.
+
+    Klasa jest wywoływana w momencie, kiedy użytkownik chce usunąć bilet, którego nie ma."""
+
+    def __init__(self):
+        super().__init__("Nie ma takiego biletu w koszyku.")
+
 class System():
     """Klasa System() obsługuje całą logikę działania automatu MPK.
 
@@ -54,7 +62,7 @@ class System():
             self.__koszyk.remove(b)
             self.__do_zaplaty -= b.cena()
         else:
-            raise Exception("Nie ma takiego biletu w koszyku.")
+            raise UsuwanieBiletuException()
 
     def koszyk(self):
         """Zwraca kopię listy biletów dodanych do koszyka."""
