@@ -38,7 +38,7 @@ def aktualizuj_koszyk(limit = 4):
     if limit >= len(koszyk):
         zasieg = 0
     else:
-        zasieg = len(koszyk)-4
+        zasieg = len(koszyk)-limit
     for i in range(zasieg, len(koszyk)):
         Label(ramka_koszyk, text=str(i+1), font="Arial 15", width=5).grid(row=i+1, column=0, padx=2, pady=2)
         Label(ramka_koszyk, text=str(koszyk[i].nazwa()), font="Arial 15", width=44).grid(row=i+1, column=1, padx=2, pady=2)
@@ -49,6 +49,18 @@ def anuluj(event):
     automat.anuluj_transakcje()
     aktualizuj_koszyk()
 
+def widok_koszyk(event):
+    print(event.widget.otwarty)
+    if event.widget.otwarty:
+        event.widget.configure(text="WRÓĆ")
+        event.widget.otwarty = False
+        ramka_bilety.pack_forget()
+        aktualizuj_koszyk(20)
+    else:
+        event.widget.configure(text="SPRAWDŹ KOSZYK")
+        event.widget.otwarty = True
+        ramka_bilety.pack(side = TOP, fill=X, pady=10)
+        aktualizuj_koszyk()
 
 automat = system.System()                                   #Tworzę obiekt automatu MPK
 bilety = [bilety.Bilety("Jednorazowy", "normalny", 3),
@@ -140,6 +152,8 @@ b.grid(row=0, column=1, padx=18, pady=2)
 b = Label(ramka_stopka, text="SPRAWDŹ KOSZYK", bg="#061981", width=20, height=2, font="Arial 15", fg="white")
 b.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
 b.bind("<Leave>", lambda event: event.widget.configure(bg="#061981"))
+b.otwarty = True
+b.bind("<Button-1>", widok_koszyk)
 b.grid(row=0, column=2, padx=18, pady=2)
 
 b = Label(ramka_stopka, text="ANULUJ", bg="red", width=20, height=2, font="Arial 15", fg="black")
