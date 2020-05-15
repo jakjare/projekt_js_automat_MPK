@@ -11,12 +11,11 @@ def pobierz_czas(label):
         label.after(1000, aktualizuj)
     aktualizuj()
 
-def on_enter(event):
-    event.widget.configure(bg="#9e9e9e")
-
-def on_leave(event):
-    event.widget.configure(bg="#646464")
-
+def usun_bilet(event):
+    try:
+        automat.usun_bilet_z_koszyka(event.widget.bilet)
+    except system.UsuwanieBiletuException:
+        event.widget.configure(bg="red")
 
 automat = system.System()                                   #Tworzę obiek automatu MPK
 bilety = [bilety.Bilety("Jednorazowy", "normalny", 3),
@@ -74,21 +73,26 @@ for rodzaj in lista_biletow:
         nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena()/100)
         b = Label(ramka_bilety, bg="#061981", text=nazwa, width=29, height=4,
                   font="Arial 15", fg="white").grid(row=i, column=j, padx=(18, 3), pady=2)
-        b = Label(ramka_bilety, bg="#646464", text="+", width=8, height=4, font="Arial 15", fg="white")
-        b.bind("<Enter>", on_enter)
-        b.bind("<Leave>", on_leave)
-
-        b.grid(row=i, column=j+1, padx=2, pady=2)
-        b = Label(ramka_bilety, bg="#646464", text="-", width=8, height=4, font="Arial 15", fg="white")
-        b.bind("<Enter>", on_enter)
-        b.bind("<Leave>", on_leave)
-        b.grid(row=i, column=j+2, padx=2, pady=2)
+        for znak in range(1, 3):
+            b = Label(ramka_bilety, bg="#646464", width=8, height=4, font="Arial 15", fg="white")
+            if znak == 1:
+                b.configure(text="+")
+                b.bind("<Button-1>", lambda event: automat.dodaj_bilet_do_koszyka(event.widget.bilet))
+            else:
+                b.configure(text="-")
+                b.bind("<Button-1>", usun_bilet)
+            b.bilet = bilet
+            b.bind("<Enter>", lambda event: event.widget.configure(bg="#9e9e9e"))
+            b.bind("<Leave>", lambda event: event.widget.configure(bg="#646464"))
+            b.grid(row=i, column=j+znak, padx=2, pady=2)
         i += 1
     j += 3
     i = 0
 del i, j, lista_biletow
 
 #Wyświetla koszyk, czyli listę aktualnie dodanych biletów oraz sumę do zapłaty
+ramka_koszyk = LabelFrame(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
+ramka_koszyk.pack(side = TOP, fill=X,padx = 20)
 
 
 
