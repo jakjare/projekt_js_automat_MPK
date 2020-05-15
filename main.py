@@ -11,11 +11,34 @@ def pobierz_czas(label):
         label.after(1000, aktualizuj)
     aktualizuj()
 
+def dodaj_bilet(event):
+    automat.dodaj_bilet_do_koszyka(event.widget.bilet)
+    aktualizuj_koszyk()
+
 def usun_bilet(event):
     try:
         automat.usun_bilet_z_koszyka(event.widget.bilet)
+        aktualizuj_koszyk()
     except system.UsuwanieBiletuException:
         event.widget.configure(bg="red")
+
+def aktualizuj_koszyk():
+    global ramka_koszyk
+    ramka_koszyk.destroy()
+    koszyk = automat.koszyk()
+    ramka_koszyk = LabelFrame(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
+    ramka_koszyk.pack(side=TOP, fill=X, padx=20)
+    Label(ramka_koszyk, text="Lp.", font="Arial 15 bold", width=5).grid(row=0, column=0, padx=2, pady=2)
+    Label(ramka_koszyk, text="Nazwa", font="Arial 15 bold", width=44).grid(row=0, column=1, padx=2, pady=2)
+    Label(ramka_koszyk, text="Rodzaj", font="Arial 15 bold", width=26).grid(row=0, column=2, padx=2, pady=2)
+    Label(ramka_koszyk, text="Cena", font="Arial 15 bold", width=8).grid(row=0, column=3, padx=2, pady=2)
+
+    for i in range(len(koszyk)):
+        Label(ramka_koszyk, text=str(i+1), font="Arial 15", width=5).grid(row=i+1, column=0, padx=2, pady=2)
+        Label(ramka_koszyk, text=str(koszyk[i].nazwa()), font="Arial 15", width=44).grid(row=i+1, column=1, padx=2, pady=2)
+        Label(ramka_koszyk, text=str(koszyk[i].wariant()), font="Arial 15", width=26).grid(row=i+1, column=2, padx=2, pady=2)
+        Label(ramka_koszyk, text=str("{:.2f} zł".format(koszyk[i].cena()/100)), font="Arial 15", width=8).grid(row=i+1, column=3, padx=2, pady=2)
+
 
 automat = system.System()                                   #Tworzę obiek automatu MPK
 bilety = [bilety.Bilety("Jednorazowy", "normalny", 3),
@@ -77,7 +100,7 @@ for rodzaj in lista_biletow:
             b = Label(ramka_bilety, bg="#646464", width=8, height=4, font="Arial 15", fg="white")
             if znak == 1:
                 b.configure(text="+")
-                b.bind("<Button-1>", lambda event: automat.dodaj_bilet_do_koszyka(event.widget.bilet))
+                b.bind("<Button-1>", dodaj_bilet)
             else:
                 b.configure(text="-")
                 b.bind("<Button-1>", usun_bilet)
@@ -92,8 +115,6 @@ del i, j, lista_biletow
 
 #Wyświetla koszyk, czyli listę aktualnie dodanych biletów oraz sumę do zapłaty
 ramka_koszyk = LabelFrame(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
-ramka_koszyk.pack(side = TOP, fill=X,padx = 20)
-
-
+aktualizuj_koszyk()
 
 okno_glowne.mainloop()
