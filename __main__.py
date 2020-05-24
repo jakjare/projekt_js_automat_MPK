@@ -18,7 +18,7 @@ def main():
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
     kasa_automatu = []                                                      # Generuję pieniądze dla automatu
-    for i in range(30):
+    for i in range(1):
         kasa_automatu.append(pieniadze.Pieniadz(0.01))
         kasa_automatu.append(pieniadze.Pieniadz(0.02))
         kasa_automatu.append(pieniadze.Pieniadz(0.05))
@@ -32,7 +32,7 @@ def main():
     del kasa_automatu
 
     root = Tk()                                                             # Tworzę okno główne aplikacji
-    gui.Automat(root, automat).start()                                      # Uruchamiam obiekt automatu w GUI
+    gui.Automat(root, automat, "001").start()                                      # Uruchamiam obiekt automatu w GUI
     root.mainloop()                                                         # Główna pętla programu
 
 if __name__ == '__main__':
