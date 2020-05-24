@@ -1,5 +1,5 @@
-from logika import system
-from tkinter import Tk, Frame, LabelFrame, Label
+from logika import *
+from tkinter import Tk, Frame, LabelFrame, Label, messagebox
 import tkinter as tk
 import time
 
@@ -32,7 +32,7 @@ class RamkaBilety(Frame):
         for rodzaj in lista_biletow:
             for bilet in lista_biletow[rodzaj]:
                 nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena() / 100)
-                b = Label(self, bg="#061981", text=nazwa, width=29, height=4, font="Arial 15", fg="white").grid(row=i, column=j, padx=(18, 3), pady=2)
+                Label(self, bg="#061981", text=nazwa, width=29, height=4, font="Arial 15", fg="white").grid(row=i, column=j, padx=(18, 3), pady=2)
                 for znak in range(1, 3):
                     b = Label(self, bg="#646464", width=8, height=4, font="Arial 15", fg="white")
                     if znak == 1:
@@ -48,7 +48,6 @@ class RamkaBilety(Frame):
                 i += 1
             j += 3
             i = 0
-        del i, j, lista_biletow
 
 class Koszyk(LabelFrame):
     def __init__(self, okno_glowne: Tk):
@@ -80,11 +79,13 @@ class Stopka(Frame):
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne)
 
-    def inicjalizuj(self, suma, widok_koszyk, anuluj):
+    def inicjalizuj(self, suma, widok_koszyk, anuluj, zapłać):
         suma.grid(row=0, column=0, padx=18, pady=2)
         b = Label(self, text="ZAPŁAĆ", bg="#139017", width=20, height=2, font="Arial 15", fg="black")
         b.bind("<Enter>", lambda event: event.widget.configure(bg="#92d050"))
         b.bind("<Leave>", lambda event: event.widget.configure(bg="#139017"))
+        b.otwarty = True
+        b.bind("<Button-1>", zapłać)
         b.grid(row=0, column=1, padx=18, pady=2)
 
         b = Label(self, text="SPRAWDŹ KOSZYK", bg="#061981", width=20, height=2, font="Arial 15", fg="white")
@@ -100,17 +101,75 @@ class Stopka(Frame):
         b.bind("<Button-1>", anuluj)
         b.grid(row=0, column=3, padx=18, pady=2)
 
+class Alert(Frame):
+    def __init__(self, okno_glowne):
+        super().__init__(okno_glowne)
+        self.__wiadomość = Label(self, bg="black", width=29, height=4, font="Arial 20", fg="white")
+        self.__wiadomość.pack()
+        self.__przycisk = Label(self, text="OK", bg="grey", width=29, height=2, font="Arial 20", fg="white")
+        self.__przycisk.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
+        self.__przycisk.bind("<Leave>", lambda event: event.widget.configure(bg="grey"))
+        self.__przycisk.bind("<Button-1>", lambda event: self.place_forget())
+        self.__przycisk.pack()
+
+    def wyświetl(self, text, akcja = None):
+        self.__wiadomość.configure(text=text)
+        self.place(x=550, y=450, anchor=tk.CENTER)
+        if akcja != None:
+            akcja
+
+class Widok_zapłata(Frame):
+    def __init__(self, okno_glowne):
+        super().__init__(okno_glowne)
+        self.__suma = Label(self, width=18, height=2, font="Arial 35 bold", fg="black", borderwidth=5, relief="solid")
+        self.__suma.grid(row=0, column=0,padx=20, pady=20, columnspan=3)
+        self.__ostrzeżenie = Label(self, width=25, height=3, font="Arial 25", fg="black", text="Tylko odliczona kwota!")
+        self.__ostrzeżenie.grid(row=0, column=3, padx=20, pady=20, columnspan=3)
+        self.__pieniadze = {0.01: None, 0.02: None, 0.05: None, 0.1: None, 0.2: None, 0.5: None, 1: None, 2: None, 5: None, 10: None, 20: None, 50: None}
+
+    def aktualizajca(self, kwota):
+        self.__suma.configure(text="Do zapłaty: {:.2f} zł".format(kwota))
+
+    def inicjalizuj(self, wrzuć, anuluj):
+        i = 0
+        j = 1
+        for nazwa in self.__pieniadze:
+            ścieżka = "C:/Users/jakja/PycharmProjects/projekt_js_automat_MPK/pieniądze/{}.png".format(str(nazwa))
+            obiekt = tk.PhotoImage(file=ścieżka, width=120, height=120)
+            self.__pieniadze[nazwa] = obiekt
+            Label(self, image=obiekt).grid(row=j, column=i, padx=(18, 3), pady=2)
+            b = Label(self, text="+", bg="#061981", width=4, height=2, font="Arial 37", fg="white")
+            b.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
+            b.bind("<Leave>", lambda event: event.widget.configure(bg="#061981"))
+            b.wartość = float(nazwa)
+            b.bind("<Button-1>", wrzuć)
+            b.grid(row=j+1, column=i, padx=(18, 3), pady=2)
+            i += 1
+            if i == 6:
+                j = 3
+                i = 0
+        b = Label(self, width=25, height=3, font="Arial 25", fg="black", bg="red", text="Anuluj")
+        b.bind("<Enter>", lambda event: event.widget.configure(bg="#850000", fg="white"))
+        b.bind("<Leave>", lambda event: event.widget.configure(bg="red", fg="black"))
+        b.bind("<Button-1>", anuluj)
+        b.grid(row=5, column=3, padx=20, pady=20, columnspan=3)
+
+
+
 class Automat():
-    def __init__(self, okno_glowne: Tk, automat: system.System):
+    def __init__(self, okno_glowne: Tk, automat: system.System, id_automatu: str):
+        self.__id_automatu = id_automatu
         self.__automat = automat
         okno_glowne.title("Automat biletowy MPK")
-        okno_glowne.geometry("1100x900")
+        okno_glowne.geometry("1100x900+40+40")
         okno_glowne.resizable(False, False)
         self.__nagłówek = Nagłówek(okno_glowne)
         self.__ramka = RamkaBilety(okno_glowne)
         self.__koszyk = Koszyk(okno_glowne)
         self.__stopka = Stopka(okno_glowne)
         self.__suma = Label(self.__stopka, width=20, height=2, font="Arial 15 bold", fg="black")
+        self.__alert = Alert(okno_glowne)
+        self.__widok_do_zapłaty = Widok_zapłata(okno_glowne)
 
     def dodaj_bilet(self, event):
         self.__automat.dodaj_bilet_do_koszyka(event.widget.bilet)
@@ -123,9 +182,19 @@ class Automat():
         except system.UsuwanieBiletuException:
             event.widget.configure(bg="red")
 
-    def anuluj(self, event):
-        self.__automat.anuluj_transakcje()
+    def anuluj(self, event=None):
+        reszta = self.__automat.anuluj_transakcje()
+        self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
         self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
+        self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+        self.__widok_do_zapłaty.pack_forget()
+        self.__stopka.pack(side=tk.BOTTOM, fill=tk.X, pady=10)
+        if reszta != []:
+            zwrot = []
+            for obiekt in reszta:
+                tmp = "{} {}".format(obiekt.wartosc()/100, obiekt.waluta())
+                zwrot.append(tmp)
+            messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
 
     def widok_koszyk(self, event):
         if event.widget.otwarty:
@@ -139,11 +208,53 @@ class Automat():
             self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
             self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
 
+    def zapłać(self, event):
+        if self.__automat.koszyk() != []:
+            self.__ramka.pack_forget()
+            self.__koszyk.pack_forget()
+            self.__stopka.pack_forget()
+            self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+            self.__widok_do_zapłaty.pack(side=tk.TOP, fill=tk.BOTH)
+        else:
+            self.__alert.wyświetl("Nie wybrałeś żadnego biletu!")
+
+    def finalizuj(self, reszta):
+        zwrot = []
+        czas = time.localtime()
+        czas = time.strftime("%d/%m/%Y/%H/%M/%S", czas)
+        bilety = self.__automat.drukuj_bilety(czas, self.__id_automatu)
+        for bilet in bilety:
+            zwrot.append(str(bilet))
+
+        if reszta != []:
+            for obiekt in reszta:
+                tmp = "{} {}".format(obiekt.wartosc() / 100, obiekt.waluta())
+                zwrot.append(tmp)
+        self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
+        self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
+        self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+        self.__widok_do_zapłaty.pack_forget()
+        self.__stopka.pack(side=tk.BOTTOM, fill=tk.X, pady=10)
+        self.__automat.koszyk()
+        messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
+
+    def wrzuć_pieniądz(self, event):
+        try:
+            zwrot = self.__automat.dodaj_pieniadz(pieniadze.Pieniadz(event.widget.wartość))
+            self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+            if zwrot != None:
+                if zwrot[0]:
+                    self.finalizuj(zwrot[1])
+
+        except system.ResztaException:
+            self.__alert.wyświetl("Nie mogę wydać reszty!", self.anuluj())
+
     def start(self):
         self.__nagłówek.pobierz_czas()
         self.__nagłówek.pack(side=tk.TOP, fill=tk.X)
         self.__ramka.inicjalicuj(self.dodaj_bilet, self.usun_bilet, self.__automat)
         self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
         self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
-        self.__stopka.inicjalizuj(self.__suma, self.widok_koszyk, self.anuluj)
+        self.__stopka.inicjalizuj(self.__suma, self.widok_koszyk, self.anuluj, self.zapłać)
         self.__stopka.pack(side=tk.BOTTOM, fill=tk.X, pady=10)
+        self.__widok_do_zapłaty.inicjalizuj(self.wrzuć_pieniądz, self.anuluj)
