@@ -18,3 +18,26 @@ class Bilety():
 
     def nazwa(self):
         return self.__nazwa
+
+class DrukowaneBilety(Bilety):
+    """Klasa tworzy obiekty biletów, które zostaną wyprodukowane przez automat.
+
+    Teraz bilet zawiera więcej informacji: czas wydrukowania biletu, id automatu, który
+    drukował ten bilet oraz zmienna sygnalizująca czy bilet został użyty."""
+
+    def __init__(self, nazwa: str, wariant: str, cena, czas: str, automat: str):
+        super().__init__(nazwa, wariant, cena)
+        self.__czas = czas
+        self.__id_automatu = automat
+        self.__skasowany = False
+
+    def __str__(self):
+        if self.__skasowany:
+            return "Bilet {} - {}, z dnia {}, {}, skasowany: Tak".format(self.nazwa(), self.wariant(), self.__czas,self.__id_automatu)
+        return "Bilet {} - {}, z dnia {}, {}, skasowany: Nie".format(self.nazwa(), self.wariant(), self.__czas, self.__id_automatu)
+
+    def skasuj(self):
+        self.__skasowany = True
+
+    def skasowany(self):
+        return self.__skasowany
