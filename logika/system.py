@@ -72,7 +72,7 @@ class System():
         wyniki = []
         for bilet in self.__koszyk:
             wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, id))
-            self.__koszyk.remove(bilet)
+        self.__koszyk = []
         return wyniki
 
     def anuluj_transakcje(self):
