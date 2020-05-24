@@ -25,8 +25,8 @@ class DrukowaneBilety(Bilety):
     Teraz bilet zawiera więcej informacji: czas wydrukowania biletu, id automatu, który
     drukował ten bilet oraz zmienna sygnalizująca czy bilet został użyty."""
 
-    def __init__(self, nazwa: str, wariant: str, cena, czas: str, automat: str):
-        super().__init__(nazwa, wariant, cena)
+    def __init__(self, nazwa: str, wariant: str, czas: str, automat: str):
+        super().__init__(nazwa, wariant, 0)
         self.__czas = czas
         self.__id_automatu = automat
         self.__skasowany = False
