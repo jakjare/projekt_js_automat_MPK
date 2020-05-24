@@ -68,8 +68,12 @@ class System():
         """Zwraca kopię listy biletów dodanych do koszyka."""
         return self.__koszyk.copy()
 
-    def drukuj_bilety(self):
-        print("Drukuję bilety.")
+    def drukuj_bilety(self, czas, id):
+        wyniki = []
+        for bilet in self.__koszyk:
+            wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, id))
+            self.__koszyk.remove(bilet)
+        return wyniki
 
     def anuluj_transakcje(self):
         self.__koszyk = []
@@ -92,8 +96,7 @@ class System():
             self.__do_zaplaty -= p.wartosc()
             if self.__do_zaplaty == 0:
                 self.__kasa.dodaj_wiele(self.__transakcja.lista())
-                self.drukuj_bilety()
-                return []
+                return True, []
             elif self.__do_zaplaty < 0:
                 wartosci = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
                 kasa = self.__kasa.przeglad()
@@ -112,8 +115,8 @@ class System():
                     self.__kasa.dodaj_wiele(self.__transakcja.lista())
                     for pieniadz in reszta:
                         self.__transakcja.dodaj(self.__kasa.usun(pieniadz))
-                    self.drukuj_bilety()
-                    return self.__transakcja.lista()
+                    return True, self.__transakcja.lista()
+                return False, []
 
 
 
