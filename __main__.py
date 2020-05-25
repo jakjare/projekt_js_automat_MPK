@@ -32,7 +32,7 @@ def main():
     del kasa_automatu
 
     root = Tk()                                                             # Tworzę okno główne aplikacji
-    gui.Automat(root, automat, "001").start()                                      # Uruchamiam obiekt automatu w GUI
+    gui.Automat(root, automat, "automat-1").start()                         # Uruchamiam obiekt automatu w GUI
     root.mainloop()                                                         # Główna pętla programu
 
 if __name__ == '__main__':

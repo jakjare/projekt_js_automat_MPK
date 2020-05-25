@@ -4,15 +4,20 @@ import tkinter as tk
 import time
 
 class Nagłówek(Frame):
+    """Tworzy nagłówek dla GUI."""
+
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne, bg="#00a2ff")
         self.__o_logo = tk.PhotoImage(file="projekt_js_automat_MPK\logo.png", width=80)
-        Label(self, bg="#00a2ff", fg="white", image=self.__o_logo).pack(side=tk.LEFT, pady=10, padx=10)
-        Label(self, width=46, text="Automat biletowy MPK", bg="#00a2ff", fg="white", font="Arial 20 bold underline").pack(side=tk.LEFT)
+        Label(self, bg="#00a2ff", fg="white", image=self.__o_logo)\
+            .pack(side=tk.LEFT, pady=10, padx=10)
+        Label(self, width=46, text="Automat biletowy MPK", bg="#00a2ff", fg="white", font="Arial 20 bold underline")\
+            .pack(side=tk.LEFT)
         self.__czas_naglowek = Label(self, width=17, bg="#00a2ff", fg="white", font="Arial 15 bold")
         self.__czas_naglowek.pack(side=tk.TOP, pady=5)
 
     def pobierz_czas(self):
+        """Uruchamia pętlę zegara w nagłówku."""
         czas = time.localtime()
         self.__czas_naglowek.config(text=time.strftime("%d/%m/%Y %H:%M:%S", czas))
         def aktualizuj():
@@ -22,6 +27,13 @@ class Nagłówek(Frame):
         aktualizuj()
 
 class RamkaBilety(Frame):
+    """Tworzy ramkę biletów dla GUI.
+
+    Klasę trzeba zainicjalizować metodą inicjalizuj() podając zewnętrzne funkcje/metody, które
+    będą wywoływane przy klikaniu przycisków funkcyjnych. Klasa tworzy dwie kolumny, segreguje
+    bilety z automatu i umieszcza je w osobnych kolumnach. Do każdego biletu generuje przyciski
+    funkcujne."""
+
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne)
 
@@ -32,7 +44,8 @@ class RamkaBilety(Frame):
         for rodzaj in lista_biletow:
             for bilet in lista_biletow[rodzaj]:
                 nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena() / 100)
-                Label(self, bg="#061981", text=nazwa, width=29, height=4, font="Arial 15", fg="white").grid(row=i, column=j, padx=(18, 3), pady=2)
+                Label(self, bg="#061981", text=nazwa, width=29, height=4, font="Arial 15", fg="white")\
+                    .grid(row=i, column=j, padx=(18, 3), pady=2)
                 for znak in range(1, 3):
                     b = Label(self, bg="#646464", width=8, height=4, font="Arial 15", fg="white")
                     if znak == 1:
@@ -50,11 +63,15 @@ class RamkaBilety(Frame):
             i = 0
 
 class Koszyk(LabelFrame):
+    """Tworzy ramkę koszyka dla GUI, która wyświetla listę biletów wybranych przez użytkownika."""
+
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne, text="TWÓJ KOSZYK", font="Arial 20 bold")
         self.__okno = okno_glowne
 
     def aktualizuj_koszyk(self, automat, suma, limit=4):
+        """Metoda aktualizuje listę biletów wyświetlaną przez obiekt klasy."""
+
         suma.configure(text="Do zapłaty: {:.2f} zł".format(automat.do_zaplaty()))
         self.destroy()
         koszyk = automat.koszyk()
@@ -69,17 +86,27 @@ class Koszyk(LabelFrame):
         else:
             zasieg = len(koszyk) - limit
         for i in range(zasieg, len(koszyk)):
-            Label(self, text=str(i + 1), font="Arial 15", width=5).grid(row=i + 1, column=0, padx=2, pady=2)
-            Label(self, text=str(koszyk[i].nazwa()), font="Arial 15", width=44).grid(row=i + 1, column=1, padx=2, pady=2)
-            Label(self, text=str(koszyk[i].wariant()), font="Arial 15", width=26).grid(row=i + 1, column=2, padx=2, pady=2)
-            Label(self, text=str("{:.2f} zł".format(koszyk[i].cena() / 100)), font="Arial 15", width=8).grid(row=i + 1, column=3, padx=2, pady=2)
+            Label(self, text=str(i + 1), font="Arial 15", width=5)\
+                .grid(row=i + 1, column=0, padx=2, pady=2)
+            Label(self, text=str(koszyk[i].nazwa()), font="Arial 15", width=44)\
+                .grid(row=i + 1, column=1, padx=2, pady=2)
+            Label(self, text=str(koszyk[i].wariant()), font="Arial 15", width=26)\
+                .grid(row=i + 1, column=2, padx=2, pady=2)
+            Label(self, text=str("{:.2f} zł".format(koszyk[i].cena() / 100)), font="Arial 15", width=8)\
+                .grid(row=i + 1, column=3, padx=2, pady=2)
         self.pack(side=tk.TOP, fill=tk.X, padx=20)
 
 class Stopka(Frame):
+    """Tworzy ramkę stopki dla domyślnego widoku GUI.
+
+    Obiekt wyświetla przyciski funkcyjne oraz sumę do zapłaty."""
+
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne)
 
     def inicjalizuj(self, suma, widok_koszyk, anuluj, zapłać):
+        """Tworzy główny widok stopki, przypisuje funkcję/metody do przycisków."""
+
         suma.grid(row=0, column=0, padx=18, pady=2)
         b = Label(self, text="ZAPŁAĆ", bg="#139017", width=20, height=2, font="Arial 15", fg="black")
         b.bind("<Enter>", lambda event: event.widget.configure(bg="#92d050"))
@@ -102,6 +129,10 @@ class Stopka(Frame):
         b.grid(row=0, column=3, padx=18, pady=2)
 
 class Alert(Frame):
+    """Wyświetla wiadomość z informacją lub ostrzeżeniem.
+
+    Odpowiednik messagebox w klasie tkinter."""
+
     def __init__(self, okno_glowne):
         super().__init__(okno_glowne)
         self.__wiadomość = Label(self, bg="black", width=29, height=4, font="Arial 20", fg="white")
@@ -113,21 +144,30 @@ class Alert(Frame):
         self.__przycisk.pack()
 
     def wyświetl(self, text, akcja = None):
+        """Wyrzuca ramkę na ekran, opcjonalnie wywołuje funkcję."""
+
         self.__wiadomość.configure(text=text)
         self.place(x=550, y=450, anchor=tk.CENTER)
         if akcja != None:
             akcja
 
 class Widok_zapłata(Frame):
+    """Tworzy ramkę widoku do zapłaty - tabelka z pieniędzmi, które można wrzucić do automatu."""
+
     def __init__(self, okno_glowne):
         super().__init__(okno_glowne)
         self.__suma = Label(self, width=18, height=2, font="Arial 35 bold", fg="black", borderwidth=5, relief="solid")
         self.__suma.grid(row=0, column=0,padx=20, pady=20, columnspan=3)
         self.__ostrzeżenie = Label(self, width=25, height=3, font="Arial 25", fg="black")
         self.__ostrzeżenie.grid(row=0, column=3, padx=20, pady=20, columnspan=3)
-        self.__pieniadze = {0.01: None, 0.02: None, 0.05: None, 0.1: None, 0.2: None, 0.5: None, 1: None, 2: None, 5: None, 10: None, 20: None, 50: None}
+        self.__pieniadze = {0.01: None, 0.02: None, 0.05: None,
+                            0.1: None,  0.2: None,  0.5: None,
+                            1: None,    2: None,    5: None,
+                            10: None,   20: None,   50: None}
 
     def aktualizajca(self, kwota, ostrzeżenie = "Życzymy miłego dnia!"):
+        """Aktualizuje kwotę do zapłaty oraz ostrzeżenie wyświetlane przez GUI."""
+
         self.__suma.configure(text="Do zapłaty: {:.2f} zł".format(kwota))
         self.__ostrzeżenie.configure(text=ostrzeżenie)
 
@@ -156,6 +196,8 @@ class Widok_zapłata(Frame):
         b.grid(row=5, column=3, padx=20, pady=20, columnspan=3)
 
 class Automat():
+    """Główna klasa GUI automatu MPK - obsługuje obiekt automatu w formie graficznej."""
+
     def __init__(self, okno_glowne: Tk, automat: system.System, id_automatu: str):
         self.__id_automatu = id_automatu
         self.__automat = automat
@@ -172,11 +214,15 @@ class Automat():
         self.__widok_do_zapłaty = Widok_zapłata(self.__okno)
 
     def zamykanie(self):
+        """Obsługa kończenia pracy programu."""
+
         if messagebox.askokcancel("Zamykanie", "Czy na pewno chcesz wyłączyć automat?"):
             self.__automat.admin_zamykanie()
             self.__okno.destroy()
 
     def dodaj_bilet(self, event):
+        """Obsługa przycisków, które dodają bilet do koszyka."""
+
         if len(self.__automat.koszyk()) < 20:
             self.__automat.dodaj_bilet_do_koszyka(event.widget.bilet)
             self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
@@ -184,6 +230,8 @@ class Automat():
             self.__alert.wyświetl("W koszyku może być \nmaksymalnie 20 biletów.")
 
     def usun_bilet(self, event):
+        """Obsługa przycisków, które usuwają bilet z koszyka."""
+
         try:
             self.__automat.usun_bilet_z_koszyka(event.widget.bilet)
             self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
@@ -191,6 +239,8 @@ class Automat():
             event.widget.configure(bg="red")
 
     def anuluj(self, event=None):
+        """Obsługa przycisków anuluj."""
+
         reszta = self.__automat.anuluj_transakcje()
         self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
         self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
@@ -205,6 +255,8 @@ class Automat():
             messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
 
     def widok_koszyk(self, event):
+        """Obsługa przycisku zmieniająca widok domyślny na widok całego koszyka i z powrotem."""
+
         if self.__automat.koszyk() != []:
             if event.widget.otwarty:
                 event.widget.configure(text="WRÓĆ")
@@ -220,6 +272,8 @@ class Automat():
             self.__alert.wyświetl("Nie wybrałeś żadnego biletu!")
 
     def zapłać(self, event):
+        """Obsługa przycisku zapłać, przechodzi do widoku do zapłaty finalizującej transakcję."""
+
         if self.__automat.koszyk() != []:
             self.__ramka.pack_forget()
             self.__koszyk.pack_forget()
@@ -236,6 +290,8 @@ class Automat():
             self.__alert.wyświetl("Nie wybrałeś żadnego biletu!")
 
     def finalizuj(self, reszta):
+        """Finalizuję transakcję, drukuję bilety, zwracam resztę użytkownikowi."""
+
         zwrot = []
         czas = time.localtime()
         czas = time.strftime("%d/%m/%Y/%H/%M/%S", czas)
@@ -257,6 +313,8 @@ class Automat():
         messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
 
     def wrzuć_pieniądz(self, event):
+        """Obsługa przycisku wrzucania pieniądza do automatu."""
+
         try:
             zwrot = self.__automat.dodaj_pieniadz(pieniadze.Pieniadz(event.widget.wartość))
             self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
@@ -268,6 +326,8 @@ class Automat():
             self.__alert.wyświetl("Nie mogę wydać reszty!", self.anuluj())
 
     def start(self):
+        """Metoda uruchamia GUI."""
+
         self.__okno.protocol("WM_DELETE_WINDOW", self.zamykanie)
         self.__nagłówek.pobierz_czas()
         self.__nagłówek.pack(side=tk.TOP, fill=tk.X)

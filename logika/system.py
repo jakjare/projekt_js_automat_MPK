@@ -21,7 +21,8 @@ class UsuwanieBiletuException(Exception):
 class System():
     """Klasa System() obsługuje całą logikę działania automatu MPK.
 
-    """
+    Obsługuję całą logikę działania automatu MPK."""
+
     def __init__(self, waluta: str = "zł"):
         self.__bilety = {"normalny": [], "ulgowy": []}
         self.__kasa = pieniadze.Przechowywacz(waluta)
@@ -37,12 +38,14 @@ class System():
 
     def bilety(self):
         """Zwraca kopię listy dostępnych biletów."""
+
         return self.__bilety.copy()
 
     def admin_kasa(self, do_kasy = []):
         """Pozwala administratorowi dodać pieniądze do kasy automatu.
 
         Wyświetla stan kasy automatu po dodaniu."""
+
         if not len(do_kasy) == 0:
             self.__kasa.dodaj_wiele(do_kasy)
         print("\nADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
@@ -74,9 +77,15 @@ class System():
 
     def koszyk(self):
         """Zwraca kopię listy biletów dodanych do koszyka."""
+
         return self.__koszyk.copy()
 
     def drukuj_bilety(self, czas, id):
+        """Zwraca wyprodukowane obiekty biletów.
+
+        Wyprodukowane bilety zostają oznaczone czasem wydruku, id automatu
+        oraz zmienną czy bilet został skasowany."""
+
         wyniki = []
         for bilet in self.__koszyk:
             wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, id))
@@ -97,6 +106,7 @@ class System():
         Kiedy nie wystąpi żaden z powyższych przypadków automat poczeka na kolejne pieniądze. Metoda zwraca listę monet
         które chce zwrócić użytkownikowi lub pustą listę, kiedy nie potrzebuje nic zwracać. Kiedy automat nie może
         wydać reszty zwraca pieniądze wrzucone przez użytkownika wcześniej."""
+
         if not isinstance(p, pieniadze.Pieniadz):
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:

@@ -14,7 +14,7 @@ kwota", kiedy nie posiada żadnych pieniędzy. Automat wyświetla ostrzeżenie "
 posiadanych pieniędzy jest zbyt niski.
 ## Testy:
 1. Bilet kupiony za odliczoną kwotę, automat nie powinien wydać reszty ani wyświetlić takego komunikatu.
-2. Bilet kupiony płacąc więcej, automat powinien wyświetlić monit o tym ile reszty ma wydać.
+2. Bilet kupiony płacąc więcej, automat powinien wyświetlić monit o tym, że wydaje resztę.
 3. Bilet kupiony płacąc więcej, automat nie ma jak wydać reszty, automat informuje użytkownika o błędzie, nie drukuje biletów, zwraca wrzucone pieniądze.
 4. Zakup biletu płacąc po 1gr - suma stu monet 1gr ma być równa 1zł.
 5. Zakup dwóch różnych biletów naraz, automat sumuje ceny biletów i drukuje oba.
