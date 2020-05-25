@@ -47,6 +47,13 @@ class System():
             self.__kasa.dodaj_wiele(do_kasy)
         print("\nADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
 
+    def admin_zamykanie(self):
+        plik = open("kasa.dat", "w")
+        do_pliku = self.__kasa.lista()
+        for obiekt in  do_pliku:
+            plik.write(str(obiekt))
+        plik.close()
+
     def do_zaplaty(self):
         return self.__do_zaplaty/100
 

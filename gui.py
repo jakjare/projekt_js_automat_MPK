@@ -6,7 +6,7 @@ import time
 class Nagłówek(Frame):
     def __init__(self, okno_glowne: Tk):
         super().__init__(okno_glowne, bg="#00a2ff")
-        self.__o_logo = tk.PhotoImage(file="C:/Users/jakja/PycharmProjects/projekt_js_automat_MPK\logo.png", width=80)
+        self.__o_logo = tk.PhotoImage(file="projekt_js_automat_MPK\logo.png", width=80)
         Label(self, bg="#00a2ff", fg="white", image=self.__o_logo).pack(side=tk.LEFT, pady=10, padx=10)
         Label(self, width=46, text="Automat biletowy MPK", bg="#00a2ff", fg="white", font="Arial 20 bold underline").pack(side=tk.LEFT)
         self.__czas_naglowek = Label(self, width=17, bg="#00a2ff", fg="white", font="Arial 15 bold")
@@ -134,7 +134,7 @@ class Widok_zapłata(Frame):
         i = 0
         j = 1
         for nazwa in self.__pieniadze:
-            ścieżka = "C:/Users/jakja/PycharmProjects/projekt_js_automat_MPK/pieniądze/{}.png".format(str(nazwa))
+            ścieżka = "projekt_js_automat_MPK/pieniądze/{}.png".format(str(nazwa))
             obiekt = tk.PhotoImage(file=ścieżka, width=120, height=120)
             self.__pieniadze[nazwa] = obiekt
             Label(self, image=obiekt).grid(row=j, column=i, padx=(18, 3), pady=2)
@@ -154,22 +154,26 @@ class Widok_zapłata(Frame):
         b.bind("<Button-1>", anuluj)
         b.grid(row=5, column=3, padx=20, pady=20, columnspan=3)
 
-
-
 class Automat():
     def __init__(self, okno_glowne: Tk, automat: system.System, id_automatu: str):
         self.__id_automatu = id_automatu
         self.__automat = automat
-        okno_glowne.title("Automat biletowy MPK")
-        okno_glowne.geometry("1100x900+40+40")
-        okno_glowne.resizable(False, False)
-        self.__nagłówek = Nagłówek(okno_glowne)
-        self.__ramka = RamkaBilety(okno_glowne)
-        self.__koszyk = Koszyk(okno_glowne)
-        self.__stopka = Stopka(okno_glowne)
+        self.__okno = okno_glowne
+        self.__okno.title("Automat biletowy MPK")
+        self.__okno.geometry("1100x900+40+40")
+        self.__okno.resizable(False, False)
+        self.__nagłówek = Nagłówek(self.__okno)
+        self.__ramka = RamkaBilety(self.__okno)
+        self.__koszyk = Koszyk(self.__okno)
+        self.__stopka = Stopka(self.__okno)
         self.__suma = Label(self.__stopka, width=20, height=2, font="Arial 15 bold", fg="black")
-        self.__alert = Alert(okno_glowne)
-        self.__widok_do_zapłaty = Widok_zapłata(okno_glowne)
+        self.__alert = Alert(self.__okno)
+        self.__widok_do_zapłaty = Widok_zapłata(self.__okno)
+
+    def zamykanie(self):
+        if messagebox.askokcancel("Zamykanie", "Czy na pewno chcesz wyłączyć automat?"):
+            self.__automat.admin_zamykanie()
+            self.__okno.destroy()
 
     def dodaj_bilet(self, event):
         self.__automat.dodaj_bilet_do_koszyka(event.widget.bilet)
@@ -250,6 +254,7 @@ class Automat():
             self.__alert.wyświetl("Nie mogę wydać reszty!", self.anuluj())
 
     def start(self):
+        self.__okno.protocol("WM_DELETE_WINDOW", self.zamykanie)
         self.__nagłówek.pobierz_czas()
         self.__nagłówek.pack(side=tk.TOP, fill=tk.X)
         self.__ramka.inicjalicuj(self.dodaj_bilet, self.usun_bilet, self.__automat)
