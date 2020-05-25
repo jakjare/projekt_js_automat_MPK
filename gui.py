@@ -123,12 +123,13 @@ class Widok_zapłata(Frame):
         super().__init__(okno_glowne)
         self.__suma = Label(self, width=18, height=2, font="Arial 35 bold", fg="black", borderwidth=5, relief="solid")
         self.__suma.grid(row=0, column=0,padx=20, pady=20, columnspan=3)
-        self.__ostrzeżenie = Label(self, width=25, height=3, font="Arial 25", fg="black", text="Tylko odliczona kwota!")
+        self.__ostrzeżenie = Label(self, width=25, height=3, font="Arial 25", fg="black")
         self.__ostrzeżenie.grid(row=0, column=3, padx=20, pady=20, columnspan=3)
         self.__pieniadze = {0.01: None, 0.02: None, 0.05: None, 0.1: None, 0.2: None, 0.5: None, 1: None, 2: None, 5: None, 10: None, 20: None, 50: None}
 
-    def aktualizajca(self, kwota):
+    def aktualizajca(self, kwota, ostrzeżenie = "Życzymy miłego dnia!"):
         self.__suma.configure(text="Do zapłaty: {:.2f} zł".format(kwota))
+        self.__ostrzeżenie.configure(text=ostrzeżenie)
 
     def inicjalizuj(self, wrzuć, anuluj):
         i = 0
@@ -176,8 +177,11 @@ class Automat():
             self.__okno.destroy()
 
     def dodaj_bilet(self, event):
-        self.__automat.dodaj_bilet_do_koszyka(event.widget.bilet)
-        self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
+        if len(self.__automat.koszyk()) < 20:
+            self.__automat.dodaj_bilet_do_koszyka(event.widget.bilet)
+            self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
+        else:
+            self.__alert.wyświetl("W koszyku może być \nmaksymalnie 20 biletów.")
 
     def usun_bilet(self, event):
         try:
@@ -201,23 +205,32 @@ class Automat():
             messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
 
     def widok_koszyk(self, event):
-        if event.widget.otwarty:
-            event.widget.configure(text="WRÓĆ")
-            event.widget.otwarty = False
-            self.__ramka.pack_forget()
-            self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma, 20)
+        if self.__automat.koszyk() != []:
+            if event.widget.otwarty:
+                event.widget.configure(text="WRÓĆ")
+                event.widget.otwarty = False
+                self.__ramka.pack_forget()
+                self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma, 20)
+            else:
+                event.widget.configure(text="SPRAWDŹ KOSZYK")
+                event.widget.otwarty = True
+                self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
+                self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
         else:
-            event.widget.configure(text="SPRAWDŹ KOSZYK")
-            event.widget.otwarty = True
-            self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
-            self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
+            self.__alert.wyświetl("Nie wybrałeś żadnego biletu!")
 
     def zapłać(self, event):
         if self.__automat.koszyk() != []:
             self.__ramka.pack_forget()
             self.__koszyk.pack_forget()
             self.__stopka.pack_forget()
-            self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+            if self.__automat.admin_kasa()[0] == 0:
+                self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty(), "Tylko odliczona kwota!")
+            elif self.__automat.admin_kasa()[0] < 40.:
+                self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty(), "Automat może nie wydać reszty.")
+            else:
+                self.__widok_do_zapłaty.aktualizajca(self.__automat.do_zaplaty())
+
             self.__widok_do_zapłaty.pack(side=tk.TOP, fill=tk.BOTH)
         else:
             self.__alert.wyświetl("Nie wybrałeś żadnego biletu!")
@@ -231,6 +244,7 @@ class Automat():
             zwrot.append(str(bilet))
 
         if reszta != []:
+            self.__alert.wyświetl("Automat wyda resztę.")
             for obiekt in reszta:
                 tmp = "{} {}".format(obiekt.wartosc() / 100, obiekt.waluta())
                 zwrot.append(tmp)
