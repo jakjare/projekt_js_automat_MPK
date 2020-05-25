@@ -18,7 +18,7 @@ def main():
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
     kasa_automatu = []                                                      # Generuję pieniądze dla automatu
-    for i in range(1):
+    for i in range(20):
         kasa_automatu.append(pieniadze.Pieniadz(0.01))
         kasa_automatu.append(pieniadze.Pieniadz(0.02))
         kasa_automatu.append(pieniadze.Pieniadz(0.05))
