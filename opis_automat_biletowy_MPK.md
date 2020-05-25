@@ -3,7 +3,7 @@
 Automat przechowuje informacje o monetach/banknotach znajdujących się w nim. (1, 2, 5, 10, 50gr, 1, 2, 5, 10, 20, 50zł). 
 Po zamknięciu systemu automat zapisuje informacje o posiadanych monetach/banknotach do pliku. Automat stale wyświetla
 domyślne menu z wyborem biletów, ich ceną, ilością aktualnie wybranych biletów oraz kwotą do zapłaty.
-Automat zapewnia możliwość wybreania więcej niż jednego biletu oraz więcej niż jednego rodzaju biletu jednocześnie.
+Automat zapewnia możliwość wybrania więcej niż jednego biletu oraz więcej niż jednego rodzaju biletu jednocześnie.
 Po zatwierdzeniu swojego "koszyka" automat przechodzi do okna, gdzie wyświetla kwotę do zapłaty oraz interfejs
 wrzucania monet z polem na wybór liczby wrzucanych monet/banknotów. Po wrzuceniu pieniędzy kwota do zapłaty na ekranie
 odpowiednio zmniejsza się. Po osiągnięciu kwoty do zapłaty automat drukuje bilety oraz wraca do menu głównego.
