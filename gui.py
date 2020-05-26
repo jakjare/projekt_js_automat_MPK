@@ -32,8 +32,7 @@ class Nagłówek(tk.Frame):
         tk.Label(self, bg=KOLOR_NAGŁÓWEK, fg=KOLOR_FONT_JASNY, image=self.__o_logo
                  ).pack(side=tk.LEFT, pady=10, padx=10)
         tk.Label(self, width=46, text="Automat biletowy MPK", bg=KOLOR_NAGŁÓWEK,
-                 fg=KOLOR_FONT_JASNY, font=f"{FONT_N} bold underline"
-                 ).pack(side=tk.LEFT)
+                 fg=KOLOR_FONT_JASNY, font=f"{FONT_N} bold underline").pack(side=tk.LEFT)
         self.__czas_naglowek = tk.Label(self, width=17, bg=KOLOR_NAGŁÓWEK, fg=KOLOR_FONT_JASNY,
                                         font=f"{FONT_ZAWARTOŚĆ} bold")
         self.__czas_naglowek.pack(side=tk.TOP, pady=5)
