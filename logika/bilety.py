@@ -32,11 +32,9 @@ class DrukowaneBilety(Bilety):
         self.__skasowany = False
 
     def __str__(self):
-        if self.__skasowany:
-            return "Bilet {} - {}, z dnia {}, {}, skasowany: Tak".format(self.nazwa(), self.wariant(),
-                                                                         self.__czas,self.__id_automatu)
-        return "Bilet {} - {}, z dnia {}, {}, skasowany: Nie".format(self.nazwa(), self.wariant(),
-                                                                     self.__czas, self.__id_automatu)
+        return "Bilet {} - {}, z dnia {}, {}, skasowany: {}".format(self.nazwa(), self.wariant(),
+                                                                    self.__czas, self.__id_automatu,
+                                                                    ["Nie", "Tak"][self.__skasowany])
 
     def skasuj(self):
         self.__skasowany = True
