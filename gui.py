@@ -1,7 +1,8 @@
-from logika import pieniadze, bilety, system
-import tkinter as tk
-from tkinter import messagebox
 import time
+import tkinter as tk
+from logika import pieniadze, bilety, system
+from tkinter import messagebox
+
 
 KOLOR_TŁA_N = "#00a2ff"                 #Kolor tła w nagłówku.
 KOLOR_FONT_JASNY = "white"              #Kolor fontu w nagłówku.
@@ -14,7 +15,6 @@ KOLOR_TŁA_BILET_F_HOVER = "#9e9e9e"     #Kolor tła przycisków biletowych +/- 
 KOLOR_TŁA_ALERT = "black"               #Kolor tła Alert().
 KOLOR_TŁA_ALERT_F = "grey"              #Kolor tła przycisku funkcyjnego w Alert().
 KOLOR_TŁA_ALERT_F_HOVER = "#465cfa"     #Kolor tła przycisku funkcyjnego w Alert() po najechaniu myszką.
-
 
 class Nagłówek(tk.Frame):
     """Tworzy nagłówek dla GUI."""
