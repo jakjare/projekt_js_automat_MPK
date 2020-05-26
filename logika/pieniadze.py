@@ -24,19 +24,21 @@ class Przechowywacz:
     Umożliwia dodawanie, usuwanie oraz liczenie wartości całkowitej przechowanych monet.
     Każdy rodzaj jest przechowywany w osobnej liście."""
     def __init__(self, waluta: str = "zł"):
-        self.__przechowywane = {1: [], 2: [], 5: [], 10: [], 20: [], 50: [], 100: [], 200: [], 500: [], 1000: [], 2000: [], 5000: []}
+        self.__przechowywane = {1: 0, 2: 0, 5: 0, 10: 0, 20: 0, 50: 0,
+                                100: 0, 200: 0, 500: 0, 1000: 0, 2000: 0, 5000: 0}
         self.__waluta = waluta
 
     def lista(self):
-        """Konwertuje przechowywane pieniądze na listę.
+        """Konwertuje przechowywane pieniądze na listę, którą zwraca.
 
         Funkcja konwertuje wszystkie przechowane pieniądze na listę, zeruje przechowywane pieniądze
         aby uniknąć dublowania pieniędzy oraz zwraca wygenerowaną listę."""
         lista = []
         for kolumna in self.__przechowywane:
-            if not len(self.__przechowywane[kolumna]) == 0:
-                lista.extend(self.__przechowywane[kolumna])
-        self.__przechowywane = {1: [], 2: [], 5: [], 10: [], 20: [], 50: [], 100: [], 200: [], 500: [], 1000: [], 2000: [], 5000: []}
+            if not self.__przechowywane[kolumna] == 0:
+                lista.extend([Pieniadz(kolumna/100) for i in range(self.__przechowywane[kolumna])])
+        self.__przechowywane = {1: 0, 2: 0, 5: 0, 10: 0, 20: 0, 50: 0,
+                                100: 0, 200: 0, 500: 0, 1000: 0, 2000: 0, 5000: 0}
         return lista
 
     def dodaj(self, p):
@@ -44,7 +46,7 @@ class Przechowywacz:
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
             if p.waluta() == self.__waluta:
-                self.__przechowywane[p.wartosc()].append(p)
+                self.__przechowywane[p.wartosc()] += 1
             else:
                 raise Exception("Nieznana waluta.")
 
@@ -56,22 +58,20 @@ class Przechowywacz:
                 self.dodaj(i)
 
     def usun(self, wartosc):
-        if len(self.__przechowywane[wartosc]) > 0:
-            p = self.__przechowywane[wartosc].pop()
-            return p
+        if self.__przechowywane[wartosc] > 0:
+            self.__przechowywane[wartosc] -= 1
+            return Pieniadz(wartosc/100)
 
     def przeglad(self):
         """Funkcja zwraca listę zliczonych rodzajów posiadanych pieniędzy."""
         posiadane = []
         for kolumna in self.__przechowywane:
-            posiadane.append(len(self.__przechowywane[kolumna]))
+            posiadane.append(self.__przechowywane[kolumna])
         return posiadane
 
     def suma(self):
         posiadane = self.przeglad()
         suma = 0
-        i = 0
-        for wartosc in self.__przechowywane:
-            suma += posiadane[i] * wartosc
-            i += 1
+        for wartosc, ilość in zip(self.__przechowywane, posiadane):
+            suma += ilość * wartosc
         return suma/100

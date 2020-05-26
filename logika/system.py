@@ -40,12 +40,12 @@ class System():
 
         return self.__bilety.copy()
 
-    def admin_kasa(self, do_kasy = []):
+    def admin_kasa(self, do_kasy = None):
         """Pozwala administratorowi dodać pieniądze do kasy automatu.
 
         Wyświetla stan kasy automatu po dodaniu."""
 
-        if not len(do_kasy) == 0:
+        if not do_kasy == None:
             self.__kasa.dodaj_wiele(do_kasy)
         print("ADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
         return self.__kasa.suma(), self.__kasa.przeglad()
