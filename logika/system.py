@@ -1,5 +1,4 @@
-from logika import bilety
-from logika import pieniadze
+from logika import bilety, pieniadze
 
 class ResztaException(Exception):
     """Klasa ResztaException() dziedziczy po klasie Exception.

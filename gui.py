@@ -3,36 +3,44 @@ import tkinter as tk
 from logika import pieniadze, bilety, system
 from tkinter import messagebox
 
-
-KOLOR_TŁA_N = "#00a2ff"                 #Kolor tła w nagłówku.
 KOLOR_FONT_JASNY = "white"              #Kolor fontu w nagłówku.
 KOLOR_FONT_CIEMNY = "black"             #Kolor fontu zawartości.
 FONT_N = "Arial 20"                     #Atrybuty fontu nagłówkowego.
 FONT_ZAWARTOŚĆ = "Arial 15"             #Atrybuty fontu zawartości.
-KOLOR_TŁA_BILET = "#061981"             #Kolor tła przycisków biletowych.
-KOLOR_TŁA_BILET_F = "#646464"           #Kolor tła przycisków biletowych +/-.
-KOLOR_TŁA_BILET_F_HOVER = "#9e9e9e"     #Kolor tła przycisków biletowych +/- po najechaniu myszką.
-KOLOR_TŁA_ALERT = "black"               #Kolor tła Alert().
-KOLOR_TŁA_ALERT_F = "grey"              #Kolor tła przycisku funkcyjnego w Alert().
-KOLOR_TŁA_ALERT_F_HOVER = "#465cfa"     #Kolor tła przycisku funkcyjnego w Alert() po najechaniu myszką.
+FONT_N_WIDOK2 = "Arial 35 bold"         #Atrybuty fontu nagłówkowego dla widoku do zapłaty.
+FONT_WIDOK2 = "Arial 25"                #Atrybuty fontu dla widoku do zapłaty.
+KOLOR_NAGŁÓWEK = "#00a2ff"              #Kolor tła w nagłówku.
+KOLOR_BILET = "#061981"                 #Kolor tła przycisków biletowych.
+KOLOR_BILET_F = "#646464"               #Kolor tła przycisków biletowych +/-.
+KOLOR_BILET_F_HOVER = "#9e9e9e"         #Kolor tła przycisków biletowych +/- po najechaniu myszką.
+KOLOR_ALERT = "black"                   #Kolor tła Alert().
+KOLOR_ALERT_F = "grey"                  #Kolor tła przycisku funkcyjnego w Alert().
+KOLOR_ALERT_F_HOVER = "#465cfa"         #Kolor tła przycisku funkcyjnego w Alert() po najechaniu myszką.
+KOLOR_BUTTON1 = "#139017"               #Kolor przycisku ZAPŁAĆ.
+KOLOR_BUTTON1_HOVER = "#92d050"         #Kolor przycisku ZAPŁAĆ po najechaniu myszką.
+KOLOR_BUTTON2 = "#061981"               #Kolor przycisku SPRAWDŹ KOSZYK.
+KOLOR_BUTTON2_HOVER = "#465cfa"         #Kolor przycisku SPRAWDŹ KOSZYK po najechaniu myszką.
+KOLOR_BUTTON3 = "red"                   #Kolor przycisku ANULUJ.
+KOLOR_BUTTON3_HOVER = "#850000"         #Kolor przycisku ANULUJ po najechaniu myszką.
 
 class Nagłówek(tk.Frame):
     """Tworzy nagłówek dla GUI."""
 
     def __init__(self, okno_glowne: tk.Tk):
-        super().__init__(okno_glowne, bg=KOLOR_TŁA_N)
-        self.__o_logo = tk.PhotoImage(file="projekt_js_automat_MPK\logo.png", width=80)
-        tk.Label(self, bg=KOLOR_TŁA_N, fg=KOLOR_FONT_JASNY, image=self.__o_logo
+        super().__init__(okno_glowne, bg=KOLOR_NAGŁÓWEK)
+        self.__o_logo = tk.PhotoImage(file="projekt_js_automat_MPK/logo.png", width=80)
+        tk.Label(self, bg=KOLOR_NAGŁÓWEK, fg=KOLOR_FONT_JASNY, image=self.__o_logo
                  ).pack(side=tk.LEFT, pady=10, padx=10)
-        tk.Label(self, width=46, text="Automat biletowy MPK", bg=KOLOR_TŁA_N,
-                 fg=KOLOR_FONT_JASNY, font="{} bold underline".format(FONT_N)
+        tk.Label(self, width=46, text="Automat biletowy MPK", bg=KOLOR_NAGŁÓWEK,
+                 fg=KOLOR_FONT_JASNY, font=f"{FONT_N} bold underline"
                  ).pack(side=tk.LEFT)
-        self.__czas_naglowek = tk.Label(self, width=17, bg=KOLOR_TŁA_N, fg=KOLOR_FONT_JASNY,
-                                        font="{} bold".format(FONT_ZAWARTOŚĆ))
+        self.__czas_naglowek = tk.Label(self, width=17, bg=KOLOR_NAGŁÓWEK, fg=KOLOR_FONT_JASNY,
+                                        font=f"{FONT_ZAWARTOŚĆ} bold")
         self.__czas_naglowek.pack(side=tk.TOP, pady=5)
 
     def pobierz_czas(self):
         """Uruchamia pętlę zegara w nagłówku."""
+
         czas = time.localtime()
         self.__czas_naglowek.config(text=time.strftime("%d/%m/%Y %H:%M:%S", czas))
         def aktualizuj():
@@ -59,11 +67,11 @@ class RamkaBilety(tk.Frame):
         for rodzaj in lista_biletow:
             for bilet in lista_biletow[rodzaj]:
                 nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena() / 100)
-                tk.Label(self, bg=KOLOR_TŁA_BILET, text=nazwa, width=29, height=4,
+                tk.Label(self, bg=KOLOR_BILET, text=nazwa, width=29, height=4,
                          font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY
                          ).grid(row=i, column=j, padx=(18, 3), pady=2)
                 for znak in range(1, 3):
-                    b = tk.Label(self, bg=KOLOR_TŁA_BILET_F, width=8, height=4,
+                    b = tk.Label(self, bg=KOLOR_BILET_F, width=8, height=4,
                                  font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY)
                     if znak == 1:
                         b.configure(text="+")
@@ -72,8 +80,8 @@ class RamkaBilety(tk.Frame):
                         b.configure(text="-")
                         b.bind("<Button-1>", usun_bilet)
                     b.bilet = bilet
-                    b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_TŁA_BILET_F_HOVER))
-                    b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_TŁA_BILET_F))
+                    b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BILET_F_HOVER))
+                    b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BILET_F))
                     b.grid(row=i, column=j + znak, padx=2, pady=2)
                 i += 1
             j += 3
@@ -83,7 +91,7 @@ class Koszyk(tk.LabelFrame):
     """Tworzy ramkę koszyka dla GUI, która wyświetla listę biletów wybranych przez użytkownika."""
 
     def __init__(self, okno_glowne: tk.Tk):
-        super().__init__(okno_glowne, text="TWÓJ KOSZYK", font="{} bold".format(FONT_N))
+        super().__init__(okno_glowne, text="TWÓJ KOSZYK", font=f"{FONT_N} bold")
         self.__okno = okno_glowne
 
     def aktualizuj_koszyk(self, automat, suma, limit=4):
@@ -92,14 +100,14 @@ class Koszyk(tk.LabelFrame):
         suma.configure(text="Do zapłaty: {:.2f} zł".format(automat.do_zaplaty()))
         self.destroy()
         koszyk = automat.koszyk()
-        super().__init__(self.__okno, text="TWÓJ KOSZYK", font="{} bold".format(FONT_N))
-        tk.Label(self, text="Lp.", font="{} bold".format(FONT_ZAWARTOŚĆ), width=5
+        super().__init__(self.__okno, text="TWÓJ KOSZYK", font=f"{FONT_N} bold")
+        tk.Label(self, text="Lp.", font=f"{FONT_ZAWARTOŚĆ} bold", width=5
                  ).grid(row=0, column=0, padx=2, pady=2)
-        tk.Label(self, text="Nazwa", font="{} bold".format(FONT_ZAWARTOŚĆ), width=44
+        tk.Label(self, text="Nazwa", font=f"{FONT_ZAWARTOŚĆ} bold", width=44
                  ).grid(row=0, column=1, padx=2, pady=2)
-        tk.Label(self, text="Rodzaj", font="{} bold".format(FONT_ZAWARTOŚĆ), width=26
+        tk.Label(self, text="Rodzaj", font=f"{FONT_ZAWARTOŚĆ} bold", width=26
                  ).grid(row=0, column=2, padx=2, pady=2)
-        tk.Label(self, text="Cena", font="{} bold".format(FONT_ZAWARTOŚĆ), width=8
+        tk.Label(self, text="Cena", font=f"{FONT_ZAWARTOŚĆ} bold", width=8
                  ).grid(row=0, column=3, padx=2, pady=2)
 
         if limit >= len(koszyk):
@@ -129,23 +137,26 @@ class Stopka(tk.Frame):
         """Tworzy główny widok stopki, przypisuje funkcję/metody do przycisków."""
 
         suma.grid(row=0, column=0, padx=18, pady=2)
-        b = tk.Label(self, text="ZAPŁAĆ", bg="#139017", width=20, height=2, font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY)
-        b.bind("<Enter>", lambda event: event.widget.configure(bg="#92d050"))
-        b.bind("<Leave>", lambda event: event.widget.configure(bg="#139017"))
+        b = tk.Label(self, text="ZAPŁAĆ", bg=KOLOR_BUTTON1, width=20, height=2,
+                     font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY)
+        b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BUTTON1_HOVER))
+        b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BUTTON1))
         b.otwarty = True
         b.bind("<Button-1>", zapłać)
         b.grid(row=0, column=1, padx=18, pady=2)
 
-        b = tk.Label(self, text="SPRAWDŹ KOSZYK", bg="#061981", width=20, height=2, font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY)
-        b.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
-        b.bind("<Leave>", lambda event: event.widget.configure(bg="#061981"))
+        b = tk.Label(self, text="SPRAWDŹ KOSZYK", bg=KOLOR_BUTTON2, width=20, height=2,
+                     font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY)
+        b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BUTTON2_HOVER))
+        b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BUTTON2))
         b.otwarty = True
         b.bind("<Button-1>", widok_koszyk)
         b.grid(row=0, column=2, padx=18, pady=2)
 
-        b = tk.Label(self, text="ANULUJ", bg="red", width=20, height=2, font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_CIEMNY)
-        b.bind("<Enter>", lambda event: event.widget.configure(bg="#850000", fg=KOLOR_FONT_JASNY))
-        b.bind("<Leave>", lambda event: event.widget.configure(bg="red", fg=KOLOR_FONT_CIEMNY))
+        b = tk.Label(self, text="ANULUJ", bg=KOLOR_BUTTON3, width=20, height=2,
+                     font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_CIEMNY)
+        b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BUTTON3_HOVER, fg=KOLOR_FONT_JASNY))
+        b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BUTTON3, fg=KOLOR_FONT_CIEMNY))
         b.bind("<Button-1>", anuluj)
         b.grid(row=0, column=3, padx=18, pady=2)
 
@@ -156,11 +167,11 @@ class Alert(tk.Frame):
 
     def __init__(self, okno_glowne):
         super().__init__(okno_glowne)
-        self.__wiadomość = tk.Label(self, bg=KOLOR_TŁA_ALERT, width=29, height=4, font=FONT_N, fg=KOLOR_FONT_JASNY)
+        self.__wiadomość = tk.Label(self, bg=KOLOR_ALERT, width=29, height=4, font=FONT_N, fg=KOLOR_FONT_JASNY)
         self.__wiadomość.pack()
-        self.__przycisk = tk.Label(self, text="OK", bg=KOLOR_TŁA_ALERT_F, width=29, height=2, font=FONT_N, fg=KOLOR_FONT_JASNY)
-        self.__przycisk.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_TŁA_ALERT_F_HOVER))
-        self.__przycisk.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_TŁA_ALERT_F))
+        self.__przycisk = tk.Label(self, text="OK", bg=KOLOR_ALERT_F, width=29, height=2, font=FONT_N, fg=KOLOR_FONT_JASNY)
+        self.__przycisk.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_ALERT_F_HOVER))
+        self.__przycisk.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_ALERT_F))
         self.__przycisk.bind("<Button-1>", lambda event: self.place_forget())
         self.__przycisk.pack()
 
@@ -177,10 +188,10 @@ class Widok_zapłata(tk.Frame):
 
     def __init__(self, okno_glowne):
         super().__init__(okno_glowne)
-        self.__suma = tk.Label(self, width=18, height=2, font="Arial 35 bold",
+        self.__suma = tk.Label(self, width=18, height=2, font=FONT_N_WIDOK2,
                                fg=KOLOR_FONT_CIEMNY, borderwidth=5, relief="solid")
         self.__suma.grid(row=0, column=0,padx=20, pady=20, columnspan=3)
-        self.__ostrzeżenie = tk.Label(self, width=25, height=3, font="Arial 25", fg=KOLOR_FONT_CIEMNY)
+        self.__ostrzeżenie = tk.Label(self, width=25, height=3, font=FONT_WIDOK2, fg=KOLOR_FONT_CIEMNY)
         self.__ostrzeżenie.grid(row=0, column=3, padx=20, pady=20, columnspan=3)
         self.__pieniadze = {0.01: None, 0.02: None, 0.05: None,
                             0.1: None,  0.2: None,  0.5: None,
@@ -197,13 +208,13 @@ class Widok_zapłata(tk.Frame):
         i = 0
         j = 1
         for nazwa in self.__pieniadze:
-            ścieżka = "projekt_js_automat_MPK/pieniądze/{}.png".format(str(nazwa))
+            ścieżka = f"projekt_js_automat_MPK/pieniądze/{nazwa}.png"
             obiekt = tk.PhotoImage(file=ścieżka, width=120, height=120)
             self.__pieniadze[nazwa] = obiekt
             tk.Label(self, image=obiekt).grid(row=j, column=i, padx=(18, 3), pady=2)
-            b = tk.Label(self, text="+", bg="#061981", width=4, height=2, font="Arial 37", fg="white")
-            b.bind("<Enter>", lambda event: event.widget.configure(bg="#465cfa"))
-            b.bind("<Leave>", lambda event: event.widget.configure(bg="#061981"))
+            b = tk.Label(self, text="+", bg=KOLOR_BUTTON2, width=4, height=2, font="Arial 37", fg=KOLOR_FONT_JASNY)
+            b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BUTTON2_HOVER))
+            b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BUTTON2))
             b.wartość = float(nazwa)
             b.bind("<Button-1>", wrzuć)
             b.grid(row=j+1, column=i, padx=(18, 3), pady=2)
@@ -211,9 +222,9 @@ class Widok_zapłata(tk.Frame):
             if i == 6:
                 j = 3
                 i = 0
-        b = tk.Label(self, width=25, height=3, font="Arial 25", fg="black", bg="red", text="Anuluj")
-        b.bind("<Enter>", lambda event: event.widget.configure(bg="#850000", fg="white"))
-        b.bind("<Leave>", lambda event: event.widget.configure(bg="red", fg="black"))
+        b = tk.Label(self, width=25, height=3, font=FONT_WIDOK2, fg=KOLOR_FONT_CIEMNY, bg=KOLOR_BUTTON3, text="Anuluj")
+        b.bind("<Enter>", lambda event: event.widget.configure(bg=KOLOR_BUTTON3_HOVER, fg=KOLOR_FONT_JASNY))
+        b.bind("<Leave>", lambda event: event.widget.configure(bg=KOLOR_BUTTON3, fg=KOLOR_FONT_CIEMNY))
         b.bind("<Button-1>", anuluj)
         b.grid(row=5, column=3, padx=20, pady=20, columnspan=3)
 
