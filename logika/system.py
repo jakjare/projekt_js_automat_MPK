@@ -54,7 +54,7 @@ class System():
         plik = open("kasa.dat", "w")
         do_pliku = self.__kasa.lista()
         for obiekt in  do_pliku:
-            plik.write("{}\n".format(str(obiekt)))
+            plik.write(f"{obiekt}\n")
         plik.close()
 
     def do_zaplaty(self):

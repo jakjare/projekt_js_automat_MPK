@@ -282,9 +282,9 @@ class Automat:
         if reszta != []:
             zwrot = []
             for obiekt in reszta:
-                tmp = "{} {}".format(obiekt.wartosc()/100, obiekt.waluta())
+                tmp = f"{obiekt.wartosc()/100} {obiekt.waluta()}"
                 zwrot.append(tmp)
-            messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
+            messagebox.showinfo("DO TWOJEJ KIESZENI", f"Automat MPK zwraca: {zwrot}")
 
     def widok_koszyk(self, event):
         """Obsługa przycisku zmieniająca widok domyślny na widok całego koszyka i z powrotem."""
@@ -334,7 +334,7 @@ class Automat:
         if reszta != []:
             self.__alert.wyświetl("Automat wyda resztę.")
             for obiekt in reszta:
-                tmp = "{} {}".format(obiekt.wartosc() / 100, obiekt.waluta())
+                tmp = f"{obiekt.wartosc() / 100} {obiekt.waluta()}"
                 zwrot.append(tmp)
         self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
         self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)
@@ -342,7 +342,7 @@ class Automat:
         self.__widok_do_zapłaty.pack_forget()
         self.__stopka.pack(side=tk.BOTTOM, fill=tk.X, pady=10)
         self.__automat.koszyk()
-        messagebox.showinfo("DO TWOJEJ KIESZENI", "Automat MPK zwraca: {}".format(zwrot))
+        messagebox.showinfo("DO TWOJEJ KIESZENI", f"Automat MPK zwraca: {zwrot}")
 
     def wrzuć_pieniądz(self, event):
         """Obsługa przycisku wrzucania pieniądza do automatu."""

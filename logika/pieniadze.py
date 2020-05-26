@@ -16,7 +16,7 @@ class Pieniadz:
         return self.__waluta
 
     def __str__(self):
-        return "{} {}".format(self.__wartosc/100, self.__waluta)
+        return f"{self.__wartosc/100} {self.__waluta}"
 
 class Przechowywacz:
     """Klasa tworzy obiekt, przechowujący monety konkretnej waluty.
