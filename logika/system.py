@@ -48,7 +48,7 @@ class System():
 
         if not len(do_kasy) == 0:
             self.__kasa.dodaj_wiele(do_kasy)
-        print("\nADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
+        print("ADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
         return self.__kasa.suma(), self.__kasa.przeglad()
 
     def admin_zamykanie(self):

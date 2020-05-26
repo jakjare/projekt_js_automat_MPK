@@ -1,4 +1,4 @@
-class Pieniadz():
+class Pieniadz:
     """Klasa pozwala tworzyć obiekty pieniędzy.
 
     Każdy pieniądz posiada określoną wartość oraz walutę."""
@@ -18,7 +18,7 @@ class Pieniadz():
     def __str__(self):
         return "{} {}".format(self.__wartosc/100, self.__waluta)
 
-class Przechowywacz():
+class Przechowywacz:
     """Klasa tworzy obiekt, przechowujący monety konkretnej waluty.
 
     Umożliwia dodawanie, usuwanie oraz liczenie wartości całkowitej przechowanych monet.
