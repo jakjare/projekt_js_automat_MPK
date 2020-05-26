@@ -82,7 +82,7 @@ class System():
 
         return self.__koszyk.copy()
 
-    def drukuj_bilety(self, czas, id):
+    def drukuj_bilety(self, czas, numer_automatu):
         """Zwraca wyprodukowane obiekty biletów.
 
         Wyprodukowane bilety zostają oznaczone czasem wydruku, id automatu
@@ -90,7 +90,7 @@ class System():
 
         wyniki = []
         for bilet in self.__koszyk:
-            wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, id))
+            wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, numer_automatu))
         self.__koszyk = defaultdict(int)
         return wyniki
 
@@ -121,12 +121,12 @@ class System():
                 wartosci = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
                 kasa = self.__kasa.przeglad()
                 reszta = []
-                for p_wart in range(1, len(wartosci)+1):
-                    for x in range(kasa[-p_wart]):
-                        if wartosci[-p_wart] + self.__do_zaplaty <= 0:
-                            self.__do_zaplaty += wartosci[-p_wart]
-                            kasa[-p_wart] -= 1
-                            reszta.append(wartosci[-p_wart])
+                for i in range(1, len(wartosci)+1):
+                    for x in range(kasa[-i]):
+                        if wartosci[-i] + self.__do_zaplaty <= 0:
+                            self.__do_zaplaty += wartosci[-i]
+                            kasa[-i] -= 1
+                            reszta.append(wartosci[-i])
                         else:
                             break
                 if self.__do_zaplaty < 0:
