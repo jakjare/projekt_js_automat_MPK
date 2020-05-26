@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+from _collections import defaultdict
 from logika import pieniadze, bilety, system
 from tkinter import messagebox
 
@@ -102,26 +103,30 @@ class Koszyk(tk.LabelFrame):
         super().__init__(self.__okno, text="TWÓJ KOSZYK", font=f"{FONT_N} bold")
         tk.Label(self, text="Lp.", font=f"{FONT_ZAWARTOŚĆ} bold", width=5
                  ).grid(row=0, column=0, padx=2, pady=2)
-        tk.Label(self, text="Nazwa", font=f"{FONT_ZAWARTOŚĆ} bold", width=44
+        tk.Label(self, text="Nazwa", font=f"{FONT_ZAWARTOŚĆ} bold", width=32
                  ).grid(row=0, column=1, padx=2, pady=2)
-        tk.Label(self, text="Rodzaj", font=f"{FONT_ZAWARTOŚĆ} bold", width=26
+        tk.Label(self, text="Rodzaj", font=f"{FONT_ZAWARTOŚĆ} bold", width=20
                  ).grid(row=0, column=2, padx=2, pady=2)
-        tk.Label(self, text="Cena", font=f"{FONT_ZAWARTOŚĆ} bold", width=8
+        tk.Label(self, text="Ilość", font=f"{FONT_ZAWARTOŚĆ} bold", width=13
                  ).grid(row=0, column=3, padx=2, pady=2)
+        tk.Label(self, text="Cena", font=f"{FONT_ZAWARTOŚĆ} bold", width=13
+                 ).grid(row=0, column=4, padx=2, pady=2)
 
-        if limit >= len(koszyk):
+        if limit >= len(koszyk.keys()):
             zasieg = 0
         else:
-            zasieg = len(koszyk) - limit
-        for i in range(zasieg, len(koszyk)):
+            zasieg = len(koszyk.keys()) - limit
+        for i, bilet in zip(range(zasieg, len(koszyk.keys())), koszyk.keys()):
             tk.Label(self, text=str(i + 1), font=FONT_ZAWARTOŚĆ, width=5
                      ).grid(row=i + 1, column=0, padx=2, pady=2)
-            tk.Label(self, text=str(koszyk[i].nazwa()), font=FONT_ZAWARTOŚĆ, width=44
+            tk.Label(self, text=bilet.nazwa(), font=FONT_ZAWARTOŚĆ, width=32
                      ).grid(row=i + 1, column=1, padx=2, pady=2)
-            tk.Label(self, text=str(koszyk[i].wariant()), font=FONT_ZAWARTOŚĆ, width=26
+            tk.Label(self, text=bilet.wariant(), font=FONT_ZAWARTOŚĆ, width=20
                      ).grid(row=i + 1, column=2, padx=2, pady=2)
-            tk.Label(self, text=str("{:.2f} zł".format(koszyk[i].cena() / 100)), font=FONT_ZAWARTOŚĆ, width=8
+            tk.Label(self, text=str(koszyk[bilet]), font=FONT_ZAWARTOŚĆ, width=13
                      ).grid(row=i + 1, column=3, padx=2, pady=2)
+            tk.Label(self, text="{:.2f} zł".format(bilet.cena() / 100), font=FONT_ZAWARTOŚĆ, width=13
+                     ).grid(row=i + 1, column=4, padx=2, pady=2)
         self.pack(side=tk.TOP, fill=tk.X, padx=20)
 
 class Stopka(tk.Frame):
@@ -289,7 +294,7 @@ class Automat:
     def widok_koszyk(self, event):
         """Obsługa przycisku zmieniająca widok domyślny na widok całego koszyka i z powrotem."""
 
-        if self.__automat.koszyk() != []:
+        if len(self.__automat.koszyk().values()) != 0:
             if event.widget.otwarty:
                 event.widget.configure(text="WRÓĆ")
                 event.widget.otwarty = False
@@ -306,7 +311,7 @@ class Automat:
     def zapłać(self, event):
         """Obsługa przycisku zapłać, przechodzi do widoku do zapłaty finalizującej transakcję."""
 
-        if self.__automat.koszyk() != []:
+        if len(self.__automat.koszyk().values()) != 0:
             self.__ramka.pack_forget()
             self.__koszyk.pack_forget()
             self.__stopka.pack_forget()

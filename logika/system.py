@@ -1,4 +1,5 @@
 from logika import bilety, pieniadze
+from _collections import defaultdict
 
 class ResztaException(Exception):
     """Klasa ResztaException() dziedziczy po klasie Exception.
@@ -26,7 +27,7 @@ class System():
         self.__bilety = {"normalny": [], "ulgowy": []}
         self.__kasa = pieniadze.Przechowywacz(waluta)
         self.__transakcja = pieniadze.Przechowywacz(waluta)
-        self.__koszyk = []
+        self.__koszyk = defaultdict(int)
         self.__do_zaplaty = 0
 
     def dodaj_bilet(self, b):
@@ -51,11 +52,10 @@ class System():
         return self.__kasa.suma(), self.__kasa.przeglad()
 
     def admin_zamykanie(self):
-        plik = open("kasa.dat", "w")
-        do_pliku = self.__kasa.lista()
-        for obiekt in  do_pliku:
-            plik.write(f"{obiekt}\n")
-        plik.close()
+        with open("kasa.dat", "w") as plik:
+            do_pliku = self.__kasa.lista()
+            for obiekt in  do_pliku:
+                plik.write(f"{obiekt}\n")
 
     def do_zaplaty(self):
         return self.__do_zaplaty/100
@@ -64,12 +64,15 @@ class System():
         if not isinstance(b, bilety.Bilety):
             raise Exception("Podany obiekt nie jest klasy Bilety().")
         else:
-            self.__koszyk.append(b)
+            self.__koszyk[b] += 1
             self.__do_zaplaty += b.cena()
 
     def usun_bilet_z_koszyka(self, b):
         if b in self.__koszyk:
-            self.__koszyk.remove(b)
+            if self.__koszyk[b] == 1:
+                self.__koszyk.pop(b)
+            else:
+                self.__koszyk[b] -= 1
             self.__do_zaplaty -= b.cena()
         else:
             raise UsuwanieBiletuException()
@@ -88,11 +91,11 @@ class System():
         wyniki = []
         for bilet in self.__koszyk:
             wyniki.append(bilety.DrukowaneBilety(bilet.nazwa(), bilet.wariant(), czas, id))
-        self.__koszyk = []
+        self.__koszyk = defaultdict(int)
         return wyniki
 
     def anuluj_transakcje(self):
-        self.__koszyk = []
+        self.__koszyk = defaultdict(int)
         self.__do_zaplaty = 0
         return self.__transakcja.lista()
 
@@ -135,11 +138,36 @@ class System():
                     return True, self.__transakcja.lista()
                 return False, []
 
+"""
+automat = System()
+b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
+b2 = bilety.Bilety("20-minutowy", "ulgowy", 1.7)
+automat.dodaj_bilet(b1)
+automat.dodaj_bilet(b2)
+xx = automat.bilety()
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
+automat.dodaj_bilet_do_koszyka(xx["normalny"][0])
+print(automat.koszyk())
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
+suma = lambda suma: suma += i for i in automat.koszyk().values():
+    suma += i
+print("xx",suma)
+automat.usun_bilet_z_koszyka(xx["normalny"][0])
+automat.usun_bilet_z_koszyka(xx["normalny"][0])
+print(automat.koszyk())
+print("Do zapłaty: {}".format(automat.do_zaplaty()))
 
+xxx =defaultdict(int)
+print(xxx.values())
 
+b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
+b2 = bilety.Bilety("20-minutowy", "ulgowy", 1.7)
+xxx =defaultdict(int)
+xxx[b1] += 1
+print(xxx.keys()[0])
 
-
-
+"""
 
 """# Test działania klasy System() w wariancie bez wydawania reszty
 
