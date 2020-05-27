@@ -1,4 +1,5 @@
 from logika import stale as st
+#import stale as st
 
 class Pieniadz:
     """Klasa pozwala tworzyć obiekty pieniędzy.
@@ -58,6 +59,8 @@ class Przechowywacz:
                 self.dodaj(i)
 
     def usun(self, wartosc):
+        if wartosc not in self.__przechowywane:
+            raise Exception("Nie przechowuję takich wartości.")
         if self.__przechowywane[wartosc] > 0:
             self.__przechowywane[wartosc] -= 1
             return Pieniadz(wartosc/100)

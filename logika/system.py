@@ -1,5 +1,7 @@
 from logika import bilety, pieniadze, stale as st
+#import bilety, pieniadze, stale as st
 from _collections import defaultdict
+
 
 class ResztaException(Exception):
     """Klasa ResztaException() dziedziczy po klasie Exception.
@@ -62,7 +64,7 @@ class System():
         Wyświetla stan kasy automatu po dodaniu."""
         if not do_kasy == None:
             self.__kasa.dodaj_wiele(do_kasy)
-        print("ADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
+        #print("ADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
         return self.__kasa.suma(), self.__kasa.przeglad()
 
     def admin_zamykanie(self):
@@ -136,127 +138,3 @@ class System():
                     self.__transakcja.dodaj(self.__kasa.usun(pieniadz))
                 return True, self.__transakcja.lista()
             return False, []
-
-"""
-automat = System()
-b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
-b2 = bilety.Bilety("20-minutowy", "ulgowy", 1.7)
-automat.dodaj_bilet(b1)
-automat.dodaj_bilet(b2)
-xx = automat.bilety()
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])
-print(automat.koszyk())
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-suma = lambda suma: suma += i for i in automat.koszyk().values():
-    suma += i
-print("xx",suma)
-automat.usun_bilet_z_koszyka(xx["normalny"][0])
-automat.usun_bilet_z_koszyka(xx["normalny"][0])
-print(automat.koszyk())
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-
-xxx =defaultdict(int)
-print(xxx.values())
-
-b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
-b2 = bilety.Bilety("20-minutowy", "ulgowy", 1.7)
-xxx =defaultdict(int)
-xxx[b1] += 1
-print(xxx.keys()[0])
-
-"""
-
-"""# Test działania klasy System() w wariancie bez wydawania reszty
-
-automat = System()                                  #Tworzę obiek automatu MPK
-b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekty biletów
-b2 = bilety.Bilety("20-minutowy", "ulgowy", 1.7)
-automat.dodaj_bilet(b1)                             #Dodaję bilety do automatu
-automat.dodaj_bilet(b2)
-kasa_automatu = []                                  #Generuję pieniądze dla automatu
-for i in range(87):
-    kasa_automatu.append(pieniadze.Pieniadz(5))
-    kasa_automatu.append(pieniadze.Pieniadz(2))
-    kasa_automatu.append(pieniadze.Pieniadz(1))
-    kasa_automatu.append(pieniadze.Pieniadz(0.1))
-    kasa_automatu.append(pieniadze.Pieniadz(.2))
-    kasa_automatu.append(pieniadze.Pieniadz(.5))
-    kasa_automatu.append(pieniadze.Pieniadz(.01))
-automat.admin_kasa(kasa_automatu)                   #Dodaję pieniądze do kasy w automacie
-del kasa_automatu
-
-xx = automat.bilety()
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])
-
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-
-p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
-p2 = pieniadze.Pieniadz(2)
-p3 = pieniadze.Pieniadz(2)
-automat.dodaj_pieniadz(p1)                          #Płacę za bilety tak aby automat nie musiał wydawać reszty
-automat.dodaj_pieniadz(p2)
-automat.dodaj_pieniadz(p3)
-
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.admin_kasa()                                #Sprawdzam stan kasy"""
-
-
-"""# Test działania klasy System() w wariancie z możliwością wydania reszty
-
-automat = System()                                  #Tworzę obiek automatu MPK
-b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
-automat.dodaj_bilet(b1)                             #Dodaję bilet do automatu
-kasa_automatu = []                                  #Generuję pieniądze dla automatu
-for i in range(100):
-    kasa_automatu.append(pieniadze.Pieniadz(0.01))
-automat.admin_kasa(kasa_automatu)                   #Dodaję pieniądze do kasy w automacie
-del kasa_automatu
-
-xx = automat.bilety()
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
-
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-
-p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
-p2 = pieniadze.Pieniadz(2)
-p3 = pieniadze.Pieniadz(10)
-automat.dodaj_pieniadz(p1)                          #Płacę za bilety tak aby automat wydał resztę
-automat.dodaj_pieniadz(p2)
-
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.admin_kasa()                                #Sprawdzam stan kasy"""
-
-
-"""# Test działania klasy System() w wariancie z możliwością wydania reszty
-
-automat = System()                                  #Tworzę obiek automatu MPK
-b1 = bilety.Bilety("20-minutowy", "normalny", 3)    #Tworzę obiekt biletu
-automat.dodaj_bilet(b1)                             #Dodaję bilet do automatu
-kasa_automatu = []                                  #Generuję pieniądze dla automatu
-for i in range(30):
-    kasa_automatu.append(pieniadze.Pieniadz(0.01))
-automat.admin_kasa(kasa_automatu)                   #Dodaję pieniądze do kasy w automacie
-del kasa_automatu
-
-xx = automat.bilety()
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-automat.dodaj_bilet_do_koszyka(xx["normalny"][0])   #Wybieram bilety, które chcę kupić
-
-print("Do zapłaty: {}".format(automat.do_zaplaty()))
-
-p1 = pieniadze.Pieniadz(2)                          #Generuję pieniądze do zapłacenia za bilety
-p2 = pieniadze.Pieniadz(2)
-
-try:
-    automat.dodaj_pieniadz(p1)                      #Płacę za bilety tak aby automat wydał resztę
-    automat.dodaj_pieniadz(p2)
-except ResztaException:
-    zwrocone = automat.anuluj_transakcje()
-
-print("Do zapłaty: {}, zwrócone: {}".format(automat.do_zaplaty(), zwrocone))
-automat.admin_kasa()                                #Sprawdzam stan kasy"""
