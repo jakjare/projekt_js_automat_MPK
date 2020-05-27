@@ -1,10 +1,12 @@
+from logika import stale as st
+
 class Pieniadz:
     """Klasa pozwala tworzyć obiekty pieniędzy.
 
     Każdy pieniądz posiada określoną wartość oraz walutę."""
     def __init__(self, wartosc, waluta: str = "zł"):
         self.__waluta = waluta
-        if wartosc in [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50]:
+        if wartosc*100 in st.NOMINAŁY:
             self.__wartosc = int(wartosc * 100)
         else:
             raise Exception("Niedozwolona wartosc monety.")
@@ -24,8 +26,7 @@ class Przechowywacz:
     Umożliwia dodawanie, usuwanie oraz liczenie wartości całkowitej przechowanych monet.
     Każdy rodzaj jest przechowywany w osobnej liście."""
     def __init__(self, waluta: str = "zł"):
-        self.__przechowywane = {1: 0, 2: 0, 5: 0, 10: 0, 20: 0, 50: 0,
-                                100: 0, 200: 0, 500: 0, 1000: 0, 2000: 0, 5000: 0}
+        self.__przechowywane = {i: 0 for i in st.NOMINAŁY}
         self.__waluta = waluta
 
     def lista(self):
@@ -37,8 +38,7 @@ class Przechowywacz:
         for kolumna in self.__przechowywane:
             if not self.__przechowywane[kolumna] == 0:
                 lista.extend([Pieniadz(kolumna/100) for i in range(self.__przechowywane[kolumna])])
-        self.__przechowywane = {1: 0, 2: 0, 5: 0, 10: 0, 20: 0, 50: 0,
-                                100: 0, 200: 0, 500: 0, 1000: 0, 2000: 0, 5000: 0}
+        self.__przechowywane = {i: 0 for i in st.NOMINAŁY}
         return lista
 
     def dodaj(self, p):
