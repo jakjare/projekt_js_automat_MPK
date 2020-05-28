@@ -22,12 +22,10 @@ def main():
 
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
-    del bilety_w_automacie
     kasa_automatu = []                                                      # Generuję pieniądze dla automatu
     for nominał in stale.NOMINAŁY:
         kasa_automatu.append(pieniadze.Pieniadz(wartość_zł=nominał/100))    # Po jednym każdego nominału
-    automat.admin_kasa(kasa_automatu)                                       # Dodaję pieniądze do kasy w automacie
-    del kasa_automatu
+    automat.admin_kasa(kasa_automatu)                                       # Dodaję pieniądze do kasy w automaciekasa_automatu
 
     root = tk.Tk()                                                          # Tworzę okno główne aplikacji
     aplikacja = gui.Automat(root, automat, "automat-1")                     # Tworzę obiekt automatu w GUI
