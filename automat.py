@@ -23,7 +23,7 @@ def main():
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
     kasa_automatu = []                                                      # Generuję pieniądze dla automatu
-    for nominał in stale.NOMINAŁY:
+    for nominał in stale.NOMINAŁY_GR:
         kasa_automatu.append(pieniadze.Pieniadz(wartość_zł=nominał/100))    # Po jednym każdego nominału
     automat.admin_kasa(kasa_automatu)                                       # Dodaję pieniądze do kasy w automaciekasa_automatu
 

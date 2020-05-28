@@ -286,7 +286,7 @@ class Automat:
         if reszta != []:
             zwrot = []
             for obiekt in reszta:
-                tmp = f"{obiekt.wartosc()/100} {obiekt.waluta()}"
+                tmp = f"{obiekt.wartość_gr()/100} {obiekt.waluta()}"
                 zwrot.append(tmp)
             messagebox.showinfo("DO TWOJEJ KIESZENI", f"Automat MPK zwraca: {zwrot}")
 
@@ -337,7 +337,7 @@ class Automat:
         if reszta != []:
             self.__alert.wyświetl("Automat wyda resztę.")
             for obiekt in reszta:
-                tmp = f"{obiekt.wartosc() / 100} {obiekt.waluta()}"
+                tmp = f"{obiekt.wartość_gr() / 100} {obiekt.waluta()}"
                 zwrot.append(tmp)
         self.__ramka.pack(side=tk.TOP, fill=tk.X, pady=10)
         self.__koszyk.aktualizuj_koszyk(self.__automat, self.__suma)

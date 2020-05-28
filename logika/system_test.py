@@ -67,7 +67,7 @@ class TestSystem(unittest.TestCase):
         self.automat.dodaj_pieniadz(pieniadze.Pieniadz(2))                  # Płacę 2 zł.
         self.reszta = self.automat.dodaj_pieniadz(pieniadze.Pieniadz(2))    # Płacę 2 zł, oczekuję reszty 1 zł.
         self.assertIsInstance(self.reszta[1][0], pieniadze.Pieniadz)        # Czy reszta jest pieniądzem?
-        self.assertEqual(self.reszta[1][0].wartosc(), 100)                  # Czy pieniądz to oczekiwane 1 zł?
+        self.assertEqual(self.reszta[1][0].wartość_gr(), 100)               # Czy pieniądz to oczekiwane 1 zł?
         if self.reszta[0]:                                                  # Jeśli zwróciło True to wydrukuj bilet.
             self.reszta = self.automat.drukuj_bilety("", "")
         self.assertIsInstance(self.reszta[0], bilety.DrukowaneBilety)       # Czy blilet jest wydrukowany?
@@ -84,7 +84,7 @@ class TestSystem(unittest.TestCase):
             self.reszta = self.automat.anuluj_transakcje()
         for i in self.reszta:
             self.assertIsInstance(i, pieniadze.Pieniadz)
-            self.assertEqual(i.wartosc(), 200)
+            self.assertEqual(i.wartość_gr(), 200)
 
     def test_opis_4(self):
         """Zakup biletu płacąc po 1gr - suma stu monet 1gr ma być równa 1zł."""

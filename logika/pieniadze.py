@@ -6,19 +6,19 @@ class Pieniadz:
     Każdy pieniądz posiada określoną wartość oraz walutę."""
     def __init__(self, wartość_zł, waluta: str = "zł"):
         self.__waluta = waluta
-        if wartość_zł*100 in st.NOMINAŁY:
-            self.__wartosc = int(wartość_zł * 100)
+        if wartość_zł*100 in st.NOMINAŁY_GR:
+            self.__wartość_gr = int(wartość_zł * 100)
         else:
             raise Exception("Niedozwolona wartosc monety.")
 
-    def wartosc(self):
-        return self.__wartosc
+    def wartość_gr(self):
+        return self.__wartość_gr
 
     def waluta(self):
         return self.__waluta
 
     def __str__(self):
-        return f"{self.__wartosc/100} {self.__waluta}"
+        return f"{self.__wartość_gr/100} {self.__waluta}"
 
 class Przechowywacz:
     """Klasa tworzy obiekt, przechowujący monety konkretnej waluty.
@@ -26,7 +26,7 @@ class Przechowywacz:
     Umożliwia dodawanie, usuwanie oraz liczenie wartości całkowitej przechowanych monet.
     Każdy rodzaj jest przechowywany w osobnej liście."""
     def __init__(self, waluta: str = "zł"):
-        self.__przechowywane = {i: 0 for i in st.NOMINAŁY}
+        self.__przechowywane = {i: 0 for i in st.NOMINAŁY_GR}
         self.__waluta = waluta
 
     def lista(self):
@@ -38,7 +38,7 @@ class Przechowywacz:
         for kolumna in self.__przechowywane:
             if not self.__przechowywane[kolumna] == 0:
                 lista.extend([Pieniadz(wartość_zł=kolumna/100) for i in range(self.__przechowywane[kolumna])])
-        self.__przechowywane = {i: 0 for i in st.NOMINAŁY}
+        self.__przechowywane = {i: 0 for i in st.NOMINAŁY_GR}
         return lista
 
     def dodaj(self, pieniądz):
@@ -46,7 +46,7 @@ class Przechowywacz:
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
             if pieniądz.waluta() == self.__waluta:
-                self.__przechowywane[pieniądz.wartosc()] += 1
+                self.__przechowywane[pieniądz.wartość_gr()] += 1
             else:
                 raise Exception("Nieznana waluta.")
 
@@ -75,6 +75,6 @@ class Przechowywacz:
         """Zwraca sumę w zł."""
         posiadane = self.przeglad()
         suma = 0
-        for wartosc, ilość in zip(self.__przechowywane, posiadane):
-            suma += ilość * wartosc
+        for wartość_gr, ilość in zip(self.__przechowywane, posiadane):
+            suma += ilość * wartość_gr
         return suma/100

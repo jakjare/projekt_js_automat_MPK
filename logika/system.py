@@ -24,7 +24,7 @@ def zwróć_resztę(kasa: pieniadze.Przechowywacz, do_zapłaty: int):
     """Funkcja zwraca pieniądze reszty wyciągnięte z kasy.
 
     Jeśli nie można zwrócić reszty wywoływany jest wyjątek ResztaException()."""
-    wartosci = st.NOMINAŁY
+    wartosci = st.NOMINAŁY_GR
     kasa = kasa.przeglad()
     reszta = []
     for i in range(len(wartosci)-1, -1, -1):
@@ -127,7 +127,7 @@ class System():
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
             self.__transakcja.dodaj(pieniądz)
-            self.__do_zaplaty -= pieniądz.wartosc()
+            self.__do_zaplaty -= pieniądz.wartość_gr()
             if self.__do_zaplaty == 0:
                 self.__kasa.dodaj_wiele(self.__transakcja.lista())
                 return True, []
