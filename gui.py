@@ -67,7 +67,7 @@ class RamkaBilety(tk.Frame):
         j = 0
         for rodzaj in lista_biletow:
             for bilet in lista_biletow[rodzaj]:
-                nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena() / 100)
+                nazwa = "{} - {}\n\n{:.2f} zł".format(bilet.nazwa(), rodzaj, bilet.cena_gr() / 100)
                 tk.Label(self, bg=KOLOR_BILET, text=nazwa, width=29, height=4,
                          font=FONT_ZAWARTOŚĆ, fg=KOLOR_FONT_JASNY
                          ).grid(row=i, column=j, padx=(18, 3), pady=2)
@@ -124,7 +124,7 @@ class Koszyk(tk.LabelFrame):
                      ).grid(row=i + 1, column=2, padx=2, pady=2)
             tk.Label(self, text=str(koszyk[bilet]), font=FONT_ZAWARTOŚĆ, width=13
                      ).grid(row=i + 1, column=3, padx=2, pady=2)
-            tk.Label(self, text="{:.2f} zł".format(bilet.cena() / 100), font=FONT_ZAWARTOŚĆ,
+            tk.Label(self, text="{:.2f} zł".format(bilet.cena_gr() / 100), font=FONT_ZAWARTOŚĆ,
                      width=13).grid(row=i + 1, column=4, padx=2, pady=2)
         self.pack(side=tk.TOP, fill=tk.X, padx=20)
 

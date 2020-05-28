@@ -81,7 +81,7 @@ class System():
         if not isinstance(bilet, bilety.Bilety):
             raise Exception("Podany obiekt nie jest klasy Bilety().")
         self.__koszyk[bilet] += 1
-        self.__do_zaplaty += bilet.cena()
+        self.__do_zaplaty += bilet.cena_gr()
 
     def usun_bilet_z_koszyka(self, bilet):
         if bilet in self.__koszyk:
@@ -89,7 +89,7 @@ class System():
                 self.__koszyk.pop(bilet)
             else:
                 self.__koszyk[bilet] -= 1
-            self.__do_zaplaty -= bilet.cena()
+            self.__do_zaplaty -= bilet.cena_gr()
         else:
             raise UsuwanieBiletuException()
 

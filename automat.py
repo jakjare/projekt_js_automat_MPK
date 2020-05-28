@@ -9,16 +9,16 @@ from logika import stale
 def main():
     """Funkcja główna."""
     automat = system.System()                                               # Tworzę obiekt automatu MPK
-    bilety_w_automacie = [bilety.Bilety(nazwa="Jednorazowy", wariant="normalny", cena=3),
-                          bilety.Bilety(nazwa="60-minutowy", wariant="normalny", cena=4),
-                          bilety.Bilety(nazwa="24-godzinny", wariant="normalny", cena=9),
-                          bilety.Bilety(nazwa="3-dniowy", wariant="normalny", cena=18),
-                          bilety.Bilety(nazwa="7-dniowy", wariant="normalny", cena=34),
-                          bilety.Bilety(nazwa="Jednorazowy", wariant="ulgowy", cena=1.5),
-                          bilety.Bilety(nazwa="60-minutowy", wariant="ulgowy", cena=2),
-                          bilety.Bilety(nazwa="24-godzinny", wariant="ulgowy", cena=4.5),
-                          bilety.Bilety(nazwa="3-dniowy", wariant="ulgowy", cena=9),
-                          bilety.Bilety(nazwa="7-dniowy", wariant="ulgowy", cena=17)] # Tworzę obiekty biletów
+    bilety_w_automacie = [bilety.Bilety(nazwa="Jednorazowy", wariant="normalny", cena_zł=3),
+                          bilety.Bilety(nazwa="60-minutowy", wariant="normalny", cena_zł=4),
+                          bilety.Bilety(nazwa="24-godzinny", wariant="normalny", cena_zł=9),
+                          bilety.Bilety(nazwa="3-dniowy", wariant="normalny", cena_zł=18),
+                          bilety.Bilety(nazwa="7-dniowy", wariant="normalny", cena_zł=34),
+                          bilety.Bilety(nazwa="Jednorazowy", wariant="ulgowy", cena_zł=1.5),
+                          bilety.Bilety(nazwa="60-minutowy", wariant="ulgowy", cena_zł=2),
+                          bilety.Bilety(nazwa="24-godzinny", wariant="ulgowy", cena_zł=4.5),
+                          bilety.Bilety(nazwa="3-dniowy", wariant="ulgowy", cena_zł=9),
+                          bilety.Bilety(nazwa="7-dniowy", wariant="ulgowy", cena_zł=17)] # Tworzę obiekty biletów
 
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
