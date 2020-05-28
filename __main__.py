@@ -1,8 +1,8 @@
-def main():
-    from logika import bilety, pieniadze, system
-    from tkinter import Tk
-    import gui
+from logika import bilety, pieniadze, system
+from tkinter import Tk
+import gui
 
+def main():
     automat = system.System()                                               # Tworzę obiekt automatu MPK
     bilety_w_automacie = [  bilety.Bilety("Jednorazowy", "normalny", 3),
                             bilety.Bilety("60-minutowy", "normalny", 4),

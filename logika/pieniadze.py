@@ -1,5 +1,4 @@
 from logika import stale as st
-#import stale as st
 
 class Pieniadz:
     """Klasa pozwala tworzyć obiekty pieniędzy.
