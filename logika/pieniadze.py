@@ -71,7 +71,7 @@ class Przechowywacz:
             posiadane.append(self.__przechowywane[kolumna])
         return posiadane
 
-    def suma(self):
+    def suma_zł(self):
         """Zwraca sumę w zł."""
         posiadane = self.przeglad()
         suma = 0

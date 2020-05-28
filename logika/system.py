@@ -65,7 +65,7 @@ class System():
         Wyświetla stan kasy automatu po dodaniu."""
         if do_kasy is not None:
             self.__kasa.dodaj_wiele(do_kasy)
-        return self.__kasa.suma(), self.__kasa.przeglad()
+        return self.__kasa.suma_zł(), self.__kasa.przeglad()
 
     def admin_zamykanie(self):
         with open("kasa.dat", "w") as plik:
