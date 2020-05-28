@@ -25,12 +25,12 @@ def zwróć_resztę(kasa: pieniadze.Przechowywacz, do_zapłaty: int):
     wartosci = st.NOMINAŁY
     kasa = kasa.przeglad()
     reszta = []
-    for i in range(1, len(wartosci) + 1):
-        for x in range(kasa[-i]):
-            if wartosci[-i] + do_zapłaty <= 0:
-                do_zapłaty += wartosci[-i]
-                kasa[-i] -= 1
-                reszta.append(wartosci[-i])
+    for i in range(len(wartosci)-1, -1, -1):
+        for x in range(kasa[i]):
+            if wartosci[i] + do_zapłaty <= 0:
+                do_zapłaty += wartosci[i]
+                kasa[i] -= 1
+                reszta.append(wartosci[i])
             else:
                 break
     if do_zapłaty < 0:
