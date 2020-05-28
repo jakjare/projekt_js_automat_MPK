@@ -1,3 +1,5 @@
+"""Obiekty biletów oraz biletów przetworzonych przez automat."""
+
 class Bilety:
     """Klasa tworzy obiekty biletów do sprzedaży.
 
@@ -6,9 +8,8 @@ class Bilety:
         self.__nazwa = nazwa
         if not wariant in ["normalny", "ulgowy"]:
             raise Exception("Nieobsługiwany wariant biletu.")
-        else:
-            self.__wariant = wariant
-            self.__cena = int(cena*100)
+        self.__wariant = wariant
+        self.__cena = int(cena*100)
 
     def cena(self):
         return self.__cena

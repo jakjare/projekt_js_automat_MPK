@@ -24,7 +24,7 @@ class TestPrzechowywacz(unittest.TestCase):
 
     def test_dodanie_waluta(self):
         """Test na dodawanie do przechowywacza pieniądza o innej walucie."""
-        self.assertRaises(Exception, self.p.dodaj, p.Pieniadz(2, "USD"))
+        self.assertRaises(Exception, self.p.dodaj, p.Pieniadz(wartość_zł = 2, waluta="USD"))
 
     def test_usuwanie(self):
         """Test na usuwanie czegość czego nie ma."""

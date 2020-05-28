@@ -1,43 +1,37 @@
+import tkinter as tk
 import gui
 
 from logika import bilety
 from logika import pieniadze
 from logika import system
-import tkinter as tk
-
+from logika import stale
 
 def main():
+    """Funkcja główna."""
     automat = system.System()                                               # Tworzę obiekt automatu MPK
-    bilety_w_automacie = [  bilety.Bilety("Jednorazowy", "normalny", 3),
-                            bilety.Bilety("60-minutowy", "normalny", 4),
-                            bilety.Bilety("24-godzinny", "normalny", 9),
-                            bilety.Bilety("3-dniowy", "normalny", 18),
-                            bilety.Bilety("7-dniowy", "normalny", 34),
-                            bilety.Bilety("Jednorazowy", "ulgowy", 1.5),
-                            bilety.Bilety("60-minutowy", "ulgowy", 2),
-                            bilety.Bilety("24-godzinny", "ulgowy", 4.5),
-                            bilety.Bilety("3-dniowy", "ulgowy", 9),
-                            bilety.Bilety("7-dniowy", "ulgowy", 17)]        # Tworzę obiekty biletów
+    bilety_w_automacie = [bilety.Bilety(nazwa="Jednorazowy", wariant="normalny", cena=3),
+                          bilety.Bilety(nazwa="60-minutowy", wariant="normalny", cena=4),
+                          bilety.Bilety(nazwa="24-godzinny", wariant="normalny", cena=9),
+                          bilety.Bilety(nazwa="3-dniowy", wariant="normalny", cena=18),
+                          bilety.Bilety(nazwa="7-dniowy", wariant="normalny", cena=34),
+                          bilety.Bilety(nazwa="Jednorazowy", wariant="ulgowy", cena=1.5),
+                          bilety.Bilety(nazwa="60-minutowy", wariant="ulgowy", cena=2),
+                          bilety.Bilety(nazwa="24-godzinny", wariant="ulgowy", cena=4.5),
+                          bilety.Bilety(nazwa="3-dniowy", wariant="ulgowy", cena=9),
+                          bilety.Bilety(nazwa="7-dniowy", wariant="ulgowy", cena=17)] # Tworzę obiekty biletów
 
     for bilet in bilety_w_automacie:
         automat.dodaj_bilet(bilet)                                          # Dodaję bilety do automatu
+    del bilety_w_automacie
     kasa_automatu = []                                                      # Generuję pieniądze dla automatu
-    for i in range(1):
-        kasa_automatu.append(pieniadze.Pieniadz(0.01))
-        kasa_automatu.append(pieniadze.Pieniadz(0.02))
-        kasa_automatu.append(pieniadze.Pieniadz(0.05))
-        kasa_automatu.append(pieniadze.Pieniadz(0.1))
-        kasa_automatu.append(pieniadze.Pieniadz(0.2))
-        kasa_automatu.append(pieniadze.Pieniadz(0.5))
-        kasa_automatu.append(pieniadze.Pieniadz(1))
-        kasa_automatu.append(pieniadze.Pieniadz(2))
-        kasa_automatu.append(pieniadze.Pieniadz(5))
+    for nominał in stale.NOMINAŁY:
+        kasa_automatu.append(pieniadze.Pieniadz(wartość_zł=nominał/100))    # Po jednym każdego nominału
     automat.admin_kasa(kasa_automatu)                                       # Dodaję pieniądze do kasy w automacie
     del kasa_automatu
 
     root = tk.Tk()                                                          # Tworzę okno główne aplikacji
-    aplikacja = gui.Automat(root, automat, "automat-1")                     # Uruchamiam obiekt automatu w GUI
-    aplikacja.start()
+    aplikacja = gui.Automat(root, automat, "automat-1")                     # Tworzę obiekt automatu w GUI
+    aplikacja.start()                                                       # Uruchamiam aplikację
     root.mainloop()                                                         # Główna pętla programu
 
 if __name__ == '__main__':

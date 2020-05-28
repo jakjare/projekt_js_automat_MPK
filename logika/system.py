@@ -1,6 +1,8 @@
+"""Moduł obsługuje całą logikę działania automatu."""
+
+from collections import defaultdict
 from logika import bilety
 from logika import pieniadze
-from collections import defaultdict
 from logika import stale as st
 
 class ResztaException(Exception):
@@ -26,7 +28,7 @@ def zwróć_resztę(kasa: pieniadze.Przechowywacz, do_zapłaty: int):
     kasa = kasa.przeglad()
     reszta = []
     for i in range(len(wartosci)-1, -1, -1):
-        for x in range(kasa[i]):
+        for j in range(kasa[i]):
             if wartosci[i] + do_zapłaty <= 0:
                 do_zapłaty += wartosci[i]
                 kasa[i] -= 1
@@ -48,23 +50,21 @@ class System():
         self.__koszyk = defaultdict(int)
         self.__do_zaplaty = 0
 
-    def dodaj_bilet(self, b):
-        if not isinstance(b, bilety.Bilety):
+    def dodaj_bilet(self, bilet):
+        if not isinstance(bilet, bilety.Bilety):
             raise Exception("Podany obiekt nie jest klasy Bilety().")
-        else:
-            self.__bilety[b.wariant()].append(b)
+        self.__bilety[bilet.wariant()].append(bilet)
 
     def bilety(self):
         """Zwraca kopię listy dostępnych biletów."""
         return self.__bilety.copy()
 
-    def admin_kasa(self, do_kasy = None):
+    def admin_kasa(self, do_kasy=None):
         """Pozwala administratorowi dodać pieniądze do kasy automatu.
 
         Wyświetla stan kasy automatu po dodaniu."""
-        if not do_kasy == None:
+        if do_kasy is not None:
             self.__kasa.dodaj_wiele(do_kasy)
-        #print("ADMIN:\tSuma w kasie: {}\tPrzegląd: {}".format(self.__kasa.suma(), self.__kasa.przeglad()))
         return self.__kasa.suma(), self.__kasa.przeglad()
 
     def admin_zamykanie(self):
@@ -74,22 +74,22 @@ class System():
                 plik.write(f"{obiekt}\n")
 
     def do_zaplaty(self):
+        """Zwraca kwotę do zapłaty w zł."""
         return self.__do_zaplaty/100
 
-    def dodaj_bilet_do_koszyka(self, b):
-        if not isinstance(b, bilety.Bilety):
+    def dodaj_bilet_do_koszyka(self, bilet):
+        if not isinstance(bilet, bilety.Bilety):
             raise Exception("Podany obiekt nie jest klasy Bilety().")
-        else:
-            self.__koszyk[b] += 1
-            self.__do_zaplaty += b.cena()
+        self.__koszyk[bilet] += 1
+        self.__do_zaplaty += bilet.cena()
 
-    def usun_bilet_z_koszyka(self, b):
-        if b in self.__koszyk:
-            if self.__koszyk[b] == 1:
-                self.__koszyk.pop(b)
+    def usun_bilet_z_koszyka(self, bilet):
+        if bilet in self.__koszyk:
+            if self.__koszyk[bilet] == 1:
+                self.__koszyk.pop(bilet)
             else:
-                self.__koszyk[b] -= 1
-            self.__do_zaplaty -= b.cena()
+                self.__koszyk[bilet] -= 1
+            self.__do_zaplaty -= bilet.cena()
         else:
             raise UsuwanieBiletuException()
 
@@ -113,7 +113,7 @@ class System():
         self.__do_zaplaty = 0
         return self.__transakcja.lista()
 
-    def dodaj_pieniadz(self, p):
+    def dodaj_pieniadz(self, pieniądz):
         """Funkcja do wurzania pieniędzy przez użytkownika.
 
         Jeśli kwota wrzucona przekroczy wartość kwoty do zapłaty uruchamia się proces wydawania reszty przy użyciu
@@ -123,11 +123,11 @@ class System():
         poczeka na kolejne pieniądze. Metoda zwraca listę monet, które chce zwrócić użytkownikowi lub pustą listę,
         kiedy nie potrzebuje nic zwracać. Kiedy automat nie może wydać reszty zwraca pieniądze wrzucone
         przez użytkownika wcześniej."""
-        if not isinstance(p, pieniadze.Pieniadz):
+        if not isinstance(pieniądz, pieniadze.Pieniadz):
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
-            self.__transakcja.dodaj(p)
-            self.__do_zaplaty -= p.wartosc()
+            self.__transakcja.dodaj(pieniądz)
+            self.__do_zaplaty -= pieniądz.wartosc()
             if self.__do_zaplaty == 0:
                 self.__kasa.dodaj_wiele(self.__transakcja.lista())
                 return True, []

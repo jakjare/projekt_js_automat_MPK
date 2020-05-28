@@ -4,10 +4,10 @@ class Pieniadz:
     """Klasa pozwala tworzyć obiekty pieniędzy.
 
     Każdy pieniądz posiada określoną wartość oraz walutę."""
-    def __init__(self, wartosc, waluta: str = "zł"):
+    def __init__(self, wartość_zł, waluta: str = "zł"):
         self.__waluta = waluta
-        if wartosc*100 in st.NOMINAŁY:
-            self.__wartosc = int(wartosc * 100)
+        if wartość_zł*100 in st.NOMINAŁY:
+            self.__wartosc = int(wartość_zł * 100)
         else:
             raise Exception("Niedozwolona wartosc monety.")
 
@@ -37,32 +37,32 @@ class Przechowywacz:
         lista = []
         for kolumna in self.__przechowywane:
             if not self.__przechowywane[kolumna] == 0:
-                lista.extend([Pieniadz(kolumna/100) for i in range(self.__przechowywane[kolumna])])
+                lista.extend([Pieniadz(wartość_zł=kolumna/100) for i in range(self.__przechowywane[kolumna])])
         self.__przechowywane = {i: 0 for i in st.NOMINAŁY}
         return lista
 
-    def dodaj(self, p):
-        if not isinstance(p, Pieniadz):
+    def dodaj(self, pieniądz):
+        if not isinstance(pieniądz, Pieniadz):
             raise Exception("Podany obiekt nie jest klasy Pieniadz().")
         else:
-            if p.waluta() == self.__waluta:
-                self.__przechowywane[p.wartosc()] += 1
+            if pieniądz.waluta() == self.__waluta:
+                self.__przechowywane[pieniądz.wartosc()] += 1
             else:
                 raise Exception("Nieznana waluta.")
 
-    def dodaj_wiele(self, p):
-        if not isinstance(p, list):
+    def dodaj_wiele(self, lista_pieniędzy):
+        if not isinstance(lista_pieniędzy, list):
             raise Exception("Podany obiekt nie jest listą.")
         else:
-            for i in p:
+            for i in lista_pieniędzy:
                 self.dodaj(i)
 
-    def usun(self, wartosc):
-        if wartosc not in self.__przechowywane:
+    def usun(self, wartość):
+        if wartość not in self.__przechowywane:
             raise Exception("Nie przechowuję takich wartości.")
-        if self.__przechowywane[wartosc] > 0:
-            self.__przechowywane[wartosc] -= 1
-            return Pieniadz(wartosc/100)
+        if self.__przechowywane[wartość] > 0:
+            self.__przechowywane[wartość] -= 1
+            return Pieniadz(wartość_zł=(wartość/100))
 
     def przeglad(self):
         """Funkcja zwraca listę zliczonych rodzajów posiadanych pieniędzy."""
@@ -72,6 +72,7 @@ class Przechowywacz:
         return posiadane
 
     def suma(self):
+        """Zwraca sumę w zł."""
         posiadane = self.przeglad()
         suma = 0
         for wartosc, ilość in zip(self.__przechowywane, posiadane):
