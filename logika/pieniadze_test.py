@@ -1,6 +1,7 @@
 """Testy modułu pieniadze."""
 
 import unittest
+
 from logika import pieniadze as p
 
 class TestPieniadz(unittest.TestCase):

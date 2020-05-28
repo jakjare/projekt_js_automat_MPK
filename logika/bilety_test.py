@@ -1,6 +1,7 @@
 """Testy modułu bilety."""
 
 import unittest
+
 from logika import bilety as b
 
 class TestBilety(unittest.TestCase):

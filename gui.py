@@ -1,8 +1,11 @@
 import time
-import tkinter as tk
-from _collections import defaultdict
-from logika import pieniadze, bilety, system
+
+from collections import defaultdict
+from logika import pieniadze
+from logika import bilety
+from logika import system
 from tkinter import messagebox
+import tkinter as tk
 
 KOLOR_FONT_JASNY = "white"              #Kolor fontu w nagłówku.
 KOLOR_FONT_CIEMNY = "black"             #Kolor fontu zawartości.
@@ -29,7 +32,7 @@ class Nagłówek(tk.Frame):
 
     def __init__(self, okno_glowne: tk.Tk):
         super().__init__(okno_glowne, bg=KOLOR_NAGŁÓWEK)
-        self.__o_logo = tk.PhotoImage(file="projekt_js_automat_MPK/logo.png", width=80)
+        self.__o_logo = tk.PhotoImage(file="logo.png", width=80)
         tk.Label(self, bg=KOLOR_NAGŁÓWEK, fg=KOLOR_FONT_JASNY, image=self.__o_logo
                  ).pack(side=tk.LEFT, pady=10, padx=10)
         tk.Label(self, width=46, text="Automat biletowy MPK", bg=KOLOR_NAGŁÓWEK,
@@ -212,7 +215,7 @@ class Widok_zapłata(tk.Frame):
         i = 0
         j = 1
         for nazwa in self.__pieniadze:
-            ścieżka = f"projekt_js_automat_MPK/pieniądze/{nazwa}.png"
+            ścieżka = f"pieniądze/{nazwa}.png"
             obiekt = tk.PhotoImage(file=ścieżka, width=120, height=120)
             self.__pieniadze[nazwa] = obiekt
             tk.Label(self, image=obiekt).grid(row=j, column=i, padx=(18, 3), pady=2)

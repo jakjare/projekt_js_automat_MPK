@@ -1,27 +1,30 @@
 """Testy modułu system."""
 
 import unittest
-from logika import pieniadze, bilety, system
+
+from logika import pieniadze
+from logika import bilety
+from logika import system
 
 class TestZwróćResztę(unittest.TestCase):
     def setUp(self):
-        self.kasa = pieniadze.Przechowywacz()  # Tworzę kasę.
+        self.kasa = pieniadze.Przechowywacz()                               # Tworzę kasę.
 
     def test_reszta_1(self):
         """Test poprawne wydanie reszty.
 
         Automat posiada dokładnie tyle ile trzeba."""
-        self.kasa.dodaj(pieniadze.Pieniadz(2))                  # Dodaję 2 zł do kasy.
-        self.reszta = system.zwróć_resztę(self.kasa, -200)      # Sprawdzam funkcję.
+        self.kasa.dodaj(pieniadze.Pieniadz(2))                              # Dodaję 2 zł do kasy.
+        self.reszta = system.zwróć_resztę(self.kasa, -200)                  # Sprawdzam funkcję.
         self.assertEqual(self.reszta[0][0], 200)
 
     def test_reszta_2(self):
         """Test poprawne wydanie reszty.
 
         Automat posiada dokładnie tyle ile trzeba, ale w mniejszych nominałach"""
-        self.kasa.dodaj(pieniadze.Pieniadz(1))                  # Dodaję 1 zł do kasy.
-        self.kasa.dodaj(pieniadze.Pieniadz(1))                  # Dodaję 1 zł do kasy.
-        self.reszta = system.zwróć_resztę(self.kasa, -200)      # Sprawdzam funkcję.
+        self.kasa.dodaj(pieniadze.Pieniadz(1))                              # Dodaję 1 zł do kasy.
+        self.kasa.dodaj(pieniadze.Pieniadz(1))                              # Dodaję 1 zł do kasy.
+        self.reszta = system.zwróć_resztę(self.kasa, -200)                  # Sprawdzam funkcję.
         self.wynik = self.reszta[0][0] + self.reszta[0][1]
         self.assertEqual(self.wynik, 200)
 
@@ -29,7 +32,7 @@ class TestZwróćResztę(unittest.TestCase):
         """Test kiedy automat nie może wydać reszty.
 
         Posiada pieniądze o wyższych nominałach."""
-        self.kasa.dodaj(pieniadze.Pieniadz(5))                  # Dodaję 5 zł do kasy.
+        self.kasa.dodaj(pieniadze.Pieniadz(5))                              # Dodaję 5 zł do kasy.
         self.assertRaises(system.ResztaException, system.zwróć_resztę, self.kasa, -200)
 
     def test_reszta_error_2(self):

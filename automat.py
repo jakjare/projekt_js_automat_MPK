@@ -1,6 +1,10 @@
-from logika import bilety, pieniadze, system
-from tkinter import Tk
 import gui
+
+from logika import bilety
+from logika import pieniadze
+from logika import system
+import tkinter as tk
+
 
 def main():
     automat = system.System()                                               # Tworzę obiekt automatu MPK
@@ -31,8 +35,9 @@ def main():
     automat.admin_kasa(kasa_automatu)                                       # Dodaję pieniądze do kasy w automacie
     del kasa_automatu
 
-    root = Tk()                                                             # Tworzę okno główne aplikacji
-    gui.Automat(root, automat, "automat-1").start()                         # Uruchamiam obiekt automatu w GUI
+    root = tk.Tk()                                                          # Tworzę okno główne aplikacji
+    aplikacja = gui.Automat(root, automat, "automat-1")                     # Uruchamiam obiekt automatu w GUI
+    aplikacja.start()
     root.mainloop()                                                         # Główna pętla programu
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
-from logika import bilety, pieniadze, stale as st
-#import bilety, pieniadze, stale as st
-from _collections import defaultdict
-
+from logika import bilety
+from logika import pieniadze
+from collections import defaultdict
+from logika import stale as st
 
 class ResztaException(Exception):
     """Klasa ResztaException() dziedziczy po klasie Exception.
